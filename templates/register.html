@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Registro de Usuario</title>
+</head>
+<body>
+    <h1>Formulario de Registro</h1>
+    <form action="/register" method="POST" enctype="multipart/form-data">
+        <label for="nombre">Nombre:</label><br/>
+        <input type="text" id="nombre" name="nombre" required /><br/><br/>
+
+        <label for="user_name">Nombre de usuario:</label><br/>
+        <input type="text" id="user_name" name="user_name" required /><br/><br/>
+
+        <label for="email">Correo electrónico:</label><br/>
+        <input type="email" id="email" name="email" required /><br/><br/>
+
+        <label for="contrasena">Contraseña:</label><br/>
+        <input type="password" id="contrasena" name="contrasena" required /><br/><br/>
+
+        <label for="fecha_nacimiento">Fecha de nacimiento:</label><br/>
+        <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" /><br/><br/>
+
+        <label for="foto">Foto:</label><br/>
+        <input type="file" id="foto" name="foto" /><br/><br/>
+
+        <label for="talla">Talla:</label><br/>
+        <select id="talla" name="talla">
+            <option value="">-- Selecciona una opción --</option>
+            <option value="Plus Size">Plus Size</option>
+            <option value="Petite">Petite</option>
+            <option value="Otros">Otros</option>
+        </select><br/><br/>
+
+        <button type="submit">Registrar</button>
+    </form>
+</body>
+</html>

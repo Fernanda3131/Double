@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil</title>
+    <style>
+
+    </style>
+</head>
+<body>
+    <div class="perfil">
+        {% if usuario %}
+            <!-- Información del usuario -->
+            <img src="{{ usuario.foto }}" alt="Foto de perfil"><br><br>
+            <h2>{{ usuario.nombre }} ({{ usuario.user_name }})</h2>
+            <p><b>Correo:</b> {{ usuario.correo }}</p>
+            <p><b>Talla:</b> {{ usuario.talla }}</p>
+            <p><b>Fecha Nacimiento:</b> {{ usuario.fecha_nacimiento }}</p>
+
+            <div class="estrellas">
+                {% for i in range(usuario.estrellas|int) %}
+                    ★
+                {% endfor %}
+                {% for i in range(5 - (usuario.estrellas|int)) %}
+                    ☆
+                {% endfor %}
+            </div>
+
+            <!-- Formulario para editar perfil -->
+            <hr>
+            <h3>Editar Perfil</h3>
+            <form method="POST" enctype="multipart/form-data">
+                Talla: <input type="text" name="talla" value="{{ usuario.talla }}"><br>
+                Contraseña: <input type="password" name="contrasena"><br>
+                Foto: <input type="file" name="foto"><br>
+                <button type="submit">Actualizar</button>
+            </form>
+
+            <!-- Publicaciones -->
+            {% if usuario.publicaciones %}
+                <div class="publicaciones">
+                    <h3>Publicaciones:</h3>
+                    <ul>
+                        {% for pub in usuario.publicaciones %}
+                            <li><b>{{ pub.tipo }}</b>: {{ pub.descripcion }} ({{ pub.fecha }})</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+                <p>No tiene publicaciones.</p>
+            {% endif %}
+
+        {% else %}
+            <p>Usuario no encontrado.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

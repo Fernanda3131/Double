@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi Perfil</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .perfil-container {
+            max-width: 900px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.15);
+        }
+        .usuario-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .usuario-info img {
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            margin-right: 20px;
+            border: 2px solid #ccc;
+        }
+        .usuario-info div h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .usuario-info div p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+        .prenda-card {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+        .prenda-card img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 20px;
+            border: 1px solid #ccc;
+        }
+        .prenda-info h3 {
+            margin: 0 0 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="perfil-container">
+        {% if perfil %}
+            <!-- Datos del usuario -->
+            <div class="usuario-info">
+                <img src="{{ url_for('static', filename=perfil[0][3]) }}" alt="Foto Usuario">
+                <div>
+                    <h2>{{ perfil[0][1] }}</h2>
+                    <p>Usuario: {{ perfil[0][2] }}</p>
+                    <p>Valoración promedio: {{ perfil[0][8]|int if perfil[0][8] else 'Sin valoraciones' }}</p>
+                </div>
+            </div>
+
+            <!-- Prendas del usuario -->
+            {% for item in perfil %}
+                <div class="prenda-card">
+                    <img src="{{ url_for('static', filename=item[7]) }}" alt="{{ item[6] }}">
+                    <div class="prenda-info">
+                        <h3>{{ item[6] }}</h3>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No se encontraron datos de perfil.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

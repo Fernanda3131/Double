@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Pago</title>
+</head>
+<body>
+    <h2>Registrar nuevo pago</h2>
+    <form action="/guardar_pago" method="POST">
+        <label for="id_usuario">ID Usuario:</label><br>
+        <input type="number" id="id_usuario" name="id_usuario" required><br><br>
+
+        <label for="id_publicacion">ID Publicación:</label><br>
+        <input type="number" id="id_publicacion" name="id_publicacion" required><br><br>
+
+        <label for="monto">Monto:</label><br>
+        <input type="number" id="monto" name="monto" required><br><br>
+
+        <label for="metodo_pago">Método de Pago:</label><br>
+        <select id="metodo_pago" name="metodo_pago" required>
+            <option value="">-- Selecciona un método --</option>
+            <option value="Nequi">Nequi</option>
+            <option value="Daviplata">Daviplata</option>
+            <option value="PSE">PSE</option>
+            <option value="Efecty">Efecty</option>
+            <option value="Bancolombia">Bancolombia</option>
+            <option value="Visa">Visa</option>
+            <option value="MasterCard">MasterCard</option>
+            <option value="Codensa">Codensa</option>
+            <option value="Davivienda">Davivienda</option>
+            <option value="Av Villas">Av Villas</option>
+        </select><br><br>
+
+        <label for="estado_pago">Estado del Pago:</label><br>
+        <select id="estado_pago" name="estado_pago" required>
+            <option value="">-- Selecciona un estado --</option>
+            <option value="PENDIENTE">PENDIENTE</option>
+            <option value="PROCESO">PROCESO</option>
+            <option value="COMPLETADO">COMPLETADO</option>
+        </select><br><br>
+
+        <label for="fecha_pago">Fecha y Hora del Pago:</label><br>
+        <input type="datetime-local" id="fecha_pago" name="fecha_pago" required><br><br>
+
+        <button type="submit">Guardar Pago</button>
+    </form>
+</body>
+</html>

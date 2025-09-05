@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Rol</title>
+</head>
+<body>
+    <h2>Agregar nuevo rol</h2>
+    <form action="/guardar_rol" method="POST">
+        <label for="rol">Nombre del rol:</label>
+        <select id="tipo" name="tipo" required>
+            <option value="">--Selecciona un tipo--</option>
+            <option value="Usuario">Usuario</option>
+            <option value="Administrador">Administrador</option>
+        </select><br><br>
+        <button type="submit">Guardar Rol</button>
+    </form>
+</body>
+</html>

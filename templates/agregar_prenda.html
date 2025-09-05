@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Prenda</title>
+</head>
+<body>
+    <h1>Agregar Nueva Prenda</h1>
+    <form action="/guardar_prenda" method="POST">
+        <label for="nombre">Nombre de la prenda:</label><br>
+        <input type="text" id="nombre" name="nombre" required><br><br>
+
+        <label for="descripcion">Descripción:</label><br>
+        <textarea id="descripcion" name="descripcion" rows="4" cols="50" required></textarea><br><br>
+
+        <label for="talla">Talla:</label><br>
+        <input type="text" id="talla" name="talla" required><br><br>
+
+        <label for="foto">URL de la foto:</label><br>
+        <input type="url" id="foto" name="foto" required><br><br>
+
+        <label for="valor">Valor:</label><br>
+        <input type="number" id="valor" name="valor" min="0" required><br><br>
+
+        <label for="publicacion">ID de la publicación:</label><br>
+        <input type="number" id="publicacion" name="publicacion" required><br><br>
+
+        <button type="submit">Guardar Prenda</button>
+    </form>
+</body>
+</html>

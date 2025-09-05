@@ -1,0 +1,87 @@
+/* Toda la pantalla */
+.register-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f5e6c5;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Encabezado */
+.register-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 30px;
+  background-color: #4b2e20;
+  color: white;
+}
+
+.register-logo {
+  width: 60px;
+  height: auto;
+  margin-left: 10px;
+  border-radius: 50%;
+}
+
+
+.register-main {
+  flex: 1;
+  padding: 40px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.register-main h2 {
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 5px;
+}
+
+.register-main p {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* Formulario */
+.register-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 40px;
+}
+
+.register-form label {
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.register-form input,
+.register-form select {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+  background-color: #d9b98c;
+  font-size: 14px;
+  outline: none;
+}
+
+.register-button {
+  grid-column: span 2;
+  justify-self: center;
+  padding: 12px 30px;
+  background-color: #a47551;
+  border: none;
+  border-radius: 20px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.register-button:hover {
+  background-color: #8b5e3c;
+  color: #fff;
+}

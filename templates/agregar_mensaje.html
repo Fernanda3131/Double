@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Mensaje</title>
+</head>
+<body>
+    <h1>Enviar Mensaje</h1>
+    <form action="/guardar_mensaje" method="POST">
+        <label for="emisor">ID del Emisor:</label><br>
+        <input type="number" id="emisor" name="emisor" required><br><br>
+
+        <label for="receptor">ID del Receptor:</label><br>
+        <input type="number" id="receptor" name="receptor" required><br><br>
+
+        <label for="contenido">Contenido del Mensaje:</label><br>
+        <textarea id="contenido" name="contenido" required></textarea><br><br>
+
+        <label for="fecha">Fecha de Envío:</label><br>
+        <input type="date" id="fecha" name="fecha" required><br><br>
+
+        <button type="submit">Enviar Mensaje</button>
+    </form>
+</body>
+</html>

@@ -1,8 +1,25 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from bd import obtener_conexion
+import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__, template_folder='templates')
+CORS(app)
 
+# ============================
+# Configuración de uploads
+# ============================
+UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+# Crear carpeta uploads si no existe
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # ============================
 # Funciones auxiliares
@@ -13,10 +30,9 @@ def existe_email(email):
         with conexion.cursor() as cursor:
             cursor.execute("SELECT COUNT(*) FROM usuario WHERE email = %s", (email,))
             resultado = cursor.fetchone()
-            return resultado[0] > 0  # True si ya existe
+            return resultado[0] > 0
     finally:
         conexion.close()
-
 
 def registrar(nombre, username, email, contrasena, talla, fecha_nacimiento, foto, id_rol):
     conexion = obtener_conexion()
@@ -38,14 +54,9 @@ def registrar(nombre, username, email, contrasena, talla, fecha_nacimiento, foto
     finally:
         conexion.close()
 
-
 # ============================
 # Rutas
 # ============================
-@app.route("/")
-
-
-
 @app.route("/register", methods=["POST"])
 def registrar_usuario():
     try:
@@ -55,13 +66,19 @@ def registrar_usuario():
         contrasena = request.form.get("contrasena")
         talla = request.form.get("talla")
         fecha_nacimiento = request.form.get("fecha_nacimiento")
-
-        foto = request.files.get("foto")
-        foto_nombre = foto.filename if foto and foto.filename != "" else None
-
         id_rol = 2  # Usuario normal
 
-        # 🚨 Validar si el correo ya existe
+        # Manejo del archivo
+        foto = request.files.get("foto")
+        foto_nombre = None
+        if foto and allowed_file(foto.filename):
+            foto_nombre = secure_filename(foto.filename)
+            foto.save(os.path.join(app.config["UPLOAD_FOLDER"], foto_nombre))
+        else:
+            # Si no hay foto, usar imagen por defecto
+            foto_nombre = "default.jpg"
+
+        # Validar si el correo ya existe
         if existe_email(email):
             return jsonify({"success": False, "mensaje": "⚠️ Este correo ya está registrado."}), 400
 
@@ -74,7 +91,6 @@ def registrar_usuario():
     except Exception as e:
         print("⚠️ Error inesperado:", e)
         return jsonify({"success": False, "mensaje": "⚠️ Error inesperado en el servidor."}), 500
-
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

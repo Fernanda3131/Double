@@ -1,0 +1,13 @@
+pip install Flask
+pip install Flask-Dance
+pip install requests
+pip install requests-oauthlib
+pip install oauthlib
+pip install gunicorn
+pip install pymongo 
+pip install flask-cors
+pip install flask-socketio
+pip install eventlet
+ en frontend
+ npm install 
+

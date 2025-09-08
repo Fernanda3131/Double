@@ -1,3 +1,4 @@
+--- Python Fask
 pip install Flask
 pip install Flask-Dance
 pip install requests
@@ -8,6 +9,8 @@ pip install pymongo
 pip install flask-cors
 pip install flask-socketio
 pip install eventlet
- en frontend
+------ en frontend
  npm install 
+ npm install react-router-dom
+
 

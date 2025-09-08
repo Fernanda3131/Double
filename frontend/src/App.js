@@ -4,6 +4,8 @@ import Home from "./Home";
 import Register from "./Register";
 import Iniciar from "./IniciarSesion";
 import Agregar from "./AgregarPublicacion";
+import Header from "./Header";
+import Footer from "./Footer";
 
 function App() {
   return (

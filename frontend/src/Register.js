@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./register.css";
+import "./register.css"; 
 
 function Register() {
   const [formData, setFormData] = useState({

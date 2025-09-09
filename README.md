@@ -77,3 +77,5 @@ Control de versiones: Git + GitHub
 👩‍💻 Autores
 
 Equipo Double.p
+
+Fernanda L y Fernanda B

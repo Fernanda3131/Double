@@ -5,44 +5,69 @@ const AgregarPublicacion = () => {
   const [tipo, setTipo] = useState("");
   const [valoracion, setValoracion] = useState(0);
 
-  // Estados nuevos para los inputs
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
+  const [talla, setTalla] = useState("");
   const [valor, setValor] = useState("");
+  const [estado, setEstado] = useState("Disponible");
+  const [mensaje, setMensaje] = useState("");
 
-  const [mensaje, setMensaje] = useState(""); // Para mostrar respuesta del backend
+  // Estados para fotos
+  const [fotos, setFotos] = useState([null, null, null, null]);
 
   const handleStarClick = (num) => {
     setValoracion(num);
   };
 
-  // Función para enviar formulario
+  const handleFotoChange = (index, file) => {
+    const nuevasFotos = [...fotos];
+    nuevasFotos[index] = file;
+    setFotos(nuevasFotos);
+  };
+
+  // Enviar datos
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const datos = {
-      nombre,
-      descripcion,
-      tipo,
-      valor,
-      valoracion,
-    };
+    const formData = new FormData();
+    formData.append("descripcion", descripcion);
+    formData.append("estado", estado);
+    formData.append("tipo_publicacion", tipo);
+    formData.append("fecha_publicacion", new Date().toISOString().slice(0, 10));
+    formData.append("nombre", nombre);
+    formData.append("descripcion_prenda", descripcion);
+    formData.append("talla", talla);
+    formData.append("valor", valor);
+    formData.append("valoracion", valoracion);
+
+    fotos.forEach((foto, i) => {
+      if (foto) formData.append(`foto${i + 1}`, foto);
+    });
 
     try {
-      const response = await fetch("http://localhost:5000/submit-form", {
+      const response = await fetch("http://localhost:5000/publicar", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(datos),
+        body: formData,
       });
 
       const data = await response.json();
-      setMensaje(data.message || "Publicado correctamente");
+      setMensaje(data.message || "Publicado correctamente ✅");
     } catch (error) {
-      setMensaje("Error al publicar");
+      setMensaje("❌ Error al publicar");
       console.error(error);
     }
+  };
+
+  // Previsualización de imágenes
+  const renderPreview = (file) => {
+    if (!file) return <span className="upload-label">📤</span>;
+    return (
+      <img
+        src={URL.createObjectURL(file)}
+        alt="preview"
+        className="preview-img"
+      />
+    );
   };
 
   return (
@@ -53,12 +78,20 @@ const AgregarPublicacion = () => {
         <div className="fotos-lado-izquierdo">
           <p className="texto">Agregar fotos de la prenda.</p>
           <div className="fotos-grid">
-            {[1, 2, 3, 4].map((n) => (
-              <div key={n} className="foto-cuadro">
-                <label htmlFor={`file${n}`} className="upload-label">
-                  📤
+            {fotos.map((foto, index) => (
+              <div className="foto-cuadro" key={index}>
+                <input
+                  type="file"
+                  id={`file${index}`}
+                  style={{ display: "none" }}
+                  accept="image/*"
+                  onChange={(e) =>
+                    handleFotoChange(index, e.target.files[0] || null)
+                  }
+                />
+                <label htmlFor={`file${index}`} className="upload-label">
+                  {renderPreview(foto)}
                 </label>
-                <input type="file" id={`file${n}`} style={{ display: "none" }} />
               </div>
             ))}
           </div>
@@ -87,32 +120,53 @@ const AgregarPublicacion = () => {
               ></textarea>
             </div>
 
+            <div className="campo">
+              <label>Talla:</label>
+              <input
+                type="text"
+                value={talla}
+                onChange={(e) => setTalla(e.target.value)}
+                required
+              />
+            </div>
+
             <div className="campo tipo-publicacion">
               <label>Tipo de publicación:</label>
               <button
                 type="button"
-                className={tipo === "venta" ? "active" : ""}
-                onClick={() => setTipo("venta")}
+                className={tipo === "Venta" ? "active" : ""}
+                onClick={() => setTipo("Venta")}
               >
                 VENTA
               </button>
               <button
                 type="button"
-                className={tipo === "intercambio" ? "active" : ""}
-                onClick={() => setTipo("intercambio")}
+                className={tipo === "Intercambio" ? "active" : ""}
+                onClick={() => setTipo("Intercambio")}
               >
                 INTERCAMBIO
               </button>
             </div>
 
             <div className="campo valor">
-              <label>Valor -&gt;</label>
+              <label>Valor:</label>
               <input
-                type="text"
+                type="number"
                 value={valor}
                 onChange={(e) => setValor(e.target.value)}
                 required
               />
+            </div>
+
+            <div className="campo estado">
+              <label>Estado:</label>
+              <select
+                value={estado}
+                onChange={(e) => setEstado(e.target.value)}
+              >
+                <option value="Disponible">Disponible</option>
+                <option value="No Disponible">No Disponible</option>
+              </select>
             </div>
 
             <div className="campo valoracion">
@@ -135,7 +189,9 @@ const AgregarPublicacion = () => {
             </button>
           </form>
 
-          {mensaje && <p style={{ marginTop: "1em", color: "green" }}>{mensaje}</p>}
+          {mensaje && (
+            <p style={{ marginTop: "1em", color: "green" }}>{mensaje}</p>
+          )}
         </div>
       </div>
     </div>
@@ -143,3 +199,4 @@ const AgregarPublicacion = () => {
 };
 
 export default AgregarPublicacion;
+

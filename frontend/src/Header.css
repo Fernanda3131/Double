@@ -13,14 +13,6 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
-  background-color: #48392e;
-  z-index: 9999;
 }
 
 .logo {

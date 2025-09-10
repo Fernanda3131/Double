@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request, redirect, flash, session, url_for
-import controlador_almacenado
+import backend.controlador_almacenado as controlador_almacenado
 import os
 import json
 from flask_dance.contrib.google import make_google_blueprint, google
-from bd import obtener_conexion
+from backend.bd import obtener_conexion
 from pymysql.cursors import DictCursor
 
 # ============================
@@ -11,6 +11,21 @@ from pymysql.cursors import DictCursor
 # ============================
 app = Flask(__name__)
 app.secret_key = "FFCD"
+
+from flask import Flask, render_template, request, redirect, session, url_for
+import os, json
+from flask_dance.contrib.google import make_google_blueprint, google
+from backend.bd import obtener_conexion
+from pymysql.cursors import DictCursor
+import backend.controlador_almacenado as controlador_almacenado
+from backend.register import register_bp   # Importamos el blueprint de registro
+
+# ============================
+# Configuración
+# ============================
+app = Flask(__name__)
+app.secret_key = "FFCD"
+app.register_blueprint(register_bp)  # Usamos el módulo register
 
 # ============================
 # Configuración Google OAuth
@@ -51,6 +66,11 @@ def google_login():
 
 # ============================
 # Cerrar sesión
+    return render_template("admin.html")
+    return redirect(url_for('login'))
+
+# ============================
+# Logout
 # ============================
 @app.route('/logout')
 def logout():
@@ -71,6 +91,7 @@ def login_acceso():
         cursor.execute("""
             SELECT * FROM usuario 
             WHERE (email = %s OR user_name = %s) AND contrasena = %s
+            WHERE (email = %s OR username = %s) AND contrasena = %s
         """, (usuario, usuario, contrasena))
         account = cursor.fetchone()
         cursor.close()
@@ -80,6 +101,7 @@ def login_acceso():
             session['logueado'] = True
             session['id_usuario'] = account['id_usuario']
             return render_template("admin.html")  # Ir directo al panel admin
+            return render_template("admin.html")
         else:
             return render_template('login.html', mensaje="Credenciales incorrectas")
     return redirect(url_for('login'))
@@ -114,6 +136,8 @@ def registrar():
 
 # ============================
 # CRUD PUBLICACIÓN
+# ============================
+# CRUDs
 # ============================
 @app.route("/agregar_publicacion")
 def formulario_agregar_publicacion():
@@ -228,6 +252,7 @@ def guardar_valoracion():
     puntaje = request.form["puntaje"]
     controlador_almacenado.insertar_valoracion(usuario_valorador_id, usuario_valorado_id, puntaje)
     return redirect("/guardado")
+# ... aquí van todos los demás CRUDs (prenda, mensaje, rol, usuario, pago, valoración)
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -5,8 +5,6 @@
   margin: 0 auto;
   padding: 20px;
   background-color: #e3d8b5;
-
-  
 }
 
 /* Título */
@@ -29,22 +27,27 @@
 /* ---- FOTOS LADO IZQUIERDO ---- */
 .fotos-lado-izquierdo {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .texto {
   margin-bottom: 10px;
   font-weight: bold;
-  font-family: "libre baskerville"; /* Fuente de texto */
+  font-family: "libre baskerville"; 
 }
 
+/* Cuadrícula de fotos 2x2, cuadros grandes */
 .fotos-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* 2 columnas */
   gap: 20px; /* espacio entre cuadros */
+  justify-content: center;
 }
 
 .foto-cuadro {
-  width: 220px;   /* un poquito más grandes */
+  width: 220px;
   height: 220px;
   border: 2px dashed #b2935b;
   display: flex;
@@ -54,10 +57,27 @@
   cursor: pointer;
   background: #b2935b;
   border-radius: 12px;
+  position: relative;
 }
+
 .upload-label {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 28px;
+  color: white;
   cursor: pointer;
+}
+
+.preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 /* ---- FORMULARIO LADO DERECHO ---- */
@@ -80,10 +100,10 @@
   font-family: "libre baskerville";
 }
 
-/* Inputs */
+/* Inputs y textarea */
 input,
 textarea {
-    outline: none; 
+  outline: none;
   padding: 10px;
   border: 1px solid #b2935b;
   border-radius: 6px;
@@ -94,7 +114,7 @@ textarea {
 /* Botones tipo de publicación */
 .tipo-publicacion {
   display: flex;
-  gap: 15px; /* separa los botones automáticamente */
+  gap: 15px;
   margin: 10px 0;
 }
 
@@ -110,18 +130,15 @@ textarea {
   font-weight: 600;
 }
 
-/* Hover: cuando paso el mouse */
 .tipo-publicacion button:hover {
   background: #48392e;
 }
 
-/* Activo: cuando se oprime #48392e*/
 .tipo-publicacion button.active {
   background: #48392e;
   color: #000;
   transform: scale(1.05);
 }
-
 
 /* Estrellas de valoración */
 .valoracion .star {
@@ -146,12 +163,11 @@ textarea {
   cursor: pointer;
   font-weight: bold;
   font-size: 1.1rem;
-  font-family: "league gothic"; /* Botón también con fuente de títulos */
+  font-family: "league gothic"; 
   transition: 0.3s;
 }
 
 .btn-publicar:hover {
   background: #48392e;
 }
-
 

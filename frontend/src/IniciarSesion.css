@@ -1,0 +1,117 @@
+/* ===== Fondo completo ===== */
+.login-page {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;   /* 🔥 todo arriba */
+  background-color: #e3d8b5;
+  padding-top: 40px;         /* 🔥 separa un poco del borde superior */
+  box-sizing: border-box;
+}
+
+/* ===== Contenedor principal ===== */
+.login-container {
+  display: flex;
+  align-items: flex-start;   /* 🔥 logo y formulario arriba */
+  justify-content: center;
+  gap: 180px;                /* más separación entre logo y formulario */
+  font-family: 'Arial', sans-serif;
+  width: 100%;
+  max-width: 1600px;
+  padding: 20px;
+}
+
+/* ===== Logo ===== */
+.login-logo img {
+  width: 500px;   /* 🔥 ajustado, no tan gigante */
+  height: 500px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-top: 0;  /* 🔥 lo subimos */
+}
+
+.login-logo h2 {
+  font-size: 52px; /* 🔥 título grande */
+  font-weight: bold;
+  margin: 0 0 20px 0; /* título arriba del logo */
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  text-align: center;
+}
+
+/* ===== Formulario ===== */
+.login-form {
+  width: 100%;
+  max-width: 550px;     /* 🔥 formulario más ancho */
+  padding: 50px 40px;   /* 🔥 más espacio interno */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background: transparent;
+  box-sizing: border-box;
+}
+
+.login-form h2 {
+  margin-bottom: 40px;
+  font-size: 42px;      /* 🔥 título más grande */
+  font-weight: bold;
+  text-align: center;
+}
+
+/* ===== Inputs ===== */
+.input-group {
+  width: 100%;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-form label {
+  margin-bottom: 12px;
+  font-weight: bold;
+  font-size: 20px;      /* 🔥 etiquetas más grandes */
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.login-form input {
+  padding: 22px;        /* 🔥 inputs mucho más altos */
+  border-radius: 35px;
+  border: none;
+  background-color: #c49e6c;
+  color: #fff;
+  font-size: 22px;      /* 🔥 texto grande */
+  outline: none;
+  width: 100%;
+  max-width: 400px;     /* 🔥 más ancho */
+  text-align: center;
+}
+
+.login-form input::placeholder {
+  color: #f1e7d3;
+  font-size: 20px;
+}
+
+/* ===== Botones ===== */
+.login-form button {
+  margin-top: 25px;
+  padding: 22px;
+  border-radius: 35px;
+  border: none;
+  background-color: #6b4a2b;
+  color: white;
+  font-size: 22px;      /* 🔥 texto grande en botones */
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 100%;
+  max-width: 400px;     /* 🔥 mismo ancho que los inputs */
+}
+
+.login-form button:hover {
+  background-color: #54351d;
+}
+

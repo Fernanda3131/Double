@@ -1,0 +1,139 @@
+/* ===== Fondo completo ===== */
+.login-page {
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: #e3d8b5;
+  padding-top: 40px;
+  box-sizing: border-box;
+}
+
+/* ===== Contenedor principal ===== */
+.login-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 135px; /* espacio entre logo y formulario */
+  font-family: 'Arial', sans-serif;
+  width: 100%;
+  max-width: 1200px;
+  padding: 15px;
+}
+
+/* ===== Logo ===== */
+.login-logo img {
+  width: 375px;
+  height: 375px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-top: 0;
+}
+
+.login-logo h2 {
+  font-size: 39px;
+  font-weight: bold;
+  margin: 0 0 15px 0;
+  text-transform: uppercase;
+  letter-spacing: 2.25px;
+  text-align: center;
+}
+
+/* ===== Formulario ===== */
+.login-form {
+  width: 100%;
+  max-width: 412px;
+  padding: 38px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;   /* alineado a la izquierda */
+  background: transparent;
+  box-sizing: border-box;
+}
+
+.login-form h2 {
+  margin-bottom: 30px;
+  font-size: 32px;
+  font-weight: bold;
+  text-align: left;   /* título a la izquierda */
+  width: 100%;
+}
+
+/* ===== Inputs ===== */
+.input-group {
+  width: 100%;
+  margin-bottom: 23px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* etiquetas e inputs a la izquierda */
+}
+
+.login-form label {
+  margin-bottom: 9px;
+  font-weight: bold;
+  font-size: 15px;
+  letter-spacing: 0.75px;
+  text-align: left;
+  width: 100%;
+}
+
+.login-form input {
+  padding: 16px;
+  border-radius: 26px;
+  border: none;
+  background-color: #c49e6c;
+  color: #fff;
+  font-size: 16px;
+  outline: none;
+  width: 100%;
+  max-width: 300px;
+  text-align: left; /* texto dentro del input a la izquierda */
+}
+
+.login-form input::placeholder {
+  color: #f1e7d3;
+  font-size: 15px;
+  text-align: left;
+}
+
+/* ===== Enlaces ===== */
+.login-form a {
+  font-size: 14px;
+  color: #4b0082;
+  text-decoration: none;
+}
+
+.login-form a:hover {
+  text-decoration: underline;
+}
+
+/* ===== Botones ===== */
+.login-form button {
+  margin-top: 19px;
+  padding: 16px;
+  border-radius: 26px;
+  border: none;
+  background-color: #6b4a2b;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 100%;
+  max-width: 300px;
+  text-align: center;
+}
+
+.login-form button:hover {
+  background-color: #54351d;
+}
+
+/* ===== Texto debajo del botón ===== */
+.login-form .signup-text {
+  margin-top: 15px;   /* separación del botón Entrar */
+  font-size: 14px;
+  text-align: left;   /* alineado a la izquierda */
+  width: 100%;
+}

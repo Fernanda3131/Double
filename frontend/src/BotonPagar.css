@@ -1,0 +1,49 @@
+.boton-pagar {
+  background: linear-gradient(135deg, #bfa074 0%, #a88a5c 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(191, 160, 116, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.boton-pagar:hover {
+  background: linear-gradient(135deg, #a88a5c 0%, #8d7147 100%);
+  box-shadow: 0 6px 20px rgba(191, 160, 116, 0.4);
+  transform: translateY(-2px);
+}
+
+.boton-pagar:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(191, 160, 116, 0.3);
+}
+
+.boton-pagar:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Variantes */
+.boton-pagar.small {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+.boton-pagar.large {
+  padding: 16px 32px;
+  font-size: 18px;
+}
+
+.boton-pagar.full-width {
+  width: 100%;
+  justify-content: center;
+}

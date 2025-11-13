@@ -69,7 +69,7 @@ function DetallePrenda() {
                 cursor: "pointer",
               }}
             >
-              Ver perfil de {prenda.username}
+              Ver perfil de {prenda.username.charAt(0).toUpperCase() + prenda.username.slice(1).toLowerCase()}
             </button>
           </div>
 

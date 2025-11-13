@@ -20,18 +20,19 @@
 }
 
 .back-button {
-  background: #95742d;
+  background: black;
   color: white;
   border: none;
   padding: 8px 16px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
+  font-weight: 500;
   transition: background 0.3s ease;
 }
 
 .back-button:hover {
-  background: #7a5f24;
+  background: #8B5A3C;
 }
 
 .destinatario-info {

@@ -43,7 +43,7 @@ function BotonPerfilUsuario({
         title="Ver perfil de usuario"
       >
         <span className="boton-perfil-icon">👤</span> 
-        <span className="boton-perfil-username">{username}</span>
+        <span className="boton-perfil-username">{username.charAt(0).toUpperCase() + username.slice(1).toLowerCase()}</span>
       </button>
     </div>
   );

@@ -1,7 +1,14 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './Footer.css'; 
 
 function Footer() {
+  const handleChatClick = (e) => {
+    e.preventDefault();
+    // Disparar evento personalizado para abrir el chat flotante
+    window.dispatchEvent(new CustomEvent('openChatModal'));
+  };
+
   return (
     <footer className="footer-container">
       <div className="footer-content">
@@ -45,30 +52,27 @@ function Footer() {
           <div className="footer-column">
             <h4>El Proyecto</h4>
             <ul>
-              <li><a href="/catalogo">Catálogo</a></li>
-              <li><a href="/register">Registro</a></li>
-              <li><a href="/home">Inicio</a></li>
-              <li><a href="/mi-perfil">Mi Perfil</a></li>
+              <li><Link to="/catalogo">Catálogo</Link></li>
+              <li><Link to="/MiPerfil">Mi Perfil</Link></li>
+              <li><a href="#" onClick={handleChatClick}>Chat</a></li>
             </ul>
           </div>
 
           <div className="footer-column">
             <h4>Aprende Más</h4>
             <ul>
-              <li><a href="/preguntas-frecuentes">Preguntas Frecuentes</a></li>
-              <li><a href="/politicas">Políticas</a></li>
-              <li><a href="/configuracion">Configuración</a></li>
-              <li><a href="/chat">Chat</a></li>
+              <li><Link to="/preguntas-frecuentes">Preguntas Frecuentes</Link></li>
+              <li><Link to="/configuracion">Configuración</Link></li>
+               <li><Link to="/politicas-seguridad">Políticas</Link></li>
             </ul>
           </div>
 
           <div className="footer-column">
             <h4>Soporte</h4>
             <ul>
-              <li><a href="/contacto">Contacto</a></li>
-              <li><a href="/ayuda">Centro de Ayuda</a></li>
-              <li><a href="/reportes">Reportes</a></li>
-              <li><a href="/terminos">Términos de Uso</a></li>
+              <li><a href="#ayuda">Centro de Ayuda</a></li>
+              <li><a href="#terminos">Términos de Uso</a></li>
+              <li><Link to="/contactanos">Contacto</Link></li>
             </ul>
           </div>
         </div>

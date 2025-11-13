@@ -26,6 +26,7 @@ import PoliticasSeguridad from "./PoliticasSeguridad";
 import PreguntasFrecuentes from "./PreguntasFrecuentes";
 import Contactanos from "./Contactanos";
 import ChatList from "./ChatList";
+import ChatModal from "./ChatModal";
 
 import Header from "./Header";
 import HeaderAdmin from "./HeaderAdmin";
@@ -102,13 +103,27 @@ function RootRedirect() {
   }
 }
 
-// �🚀 App principal
+// 🚀 App principal
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [openChatModal, setOpenChatModal] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
+  }, []);
+
+  // Listener global para abrir el chat desde cualquier parte
+  useEffect(() => {
+    const handleOpenChat = () => {
+      setOpenChatModal(true);
+    };
+    
+    window.addEventListener('openChatModal', handleOpenChat);
+    
+    return () => {
+      window.removeEventListener('openChatModal', handleOpenChat);
+    };
   }, []);
 
   return (
@@ -384,6 +399,14 @@ function App() {
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>
+
+        {/* Chat Modal Global - disponible desde cualquier página */}
+        {isLoggedIn && openChatModal && (
+          <ChatModal
+            open={openChatModal}
+            onClose={() => setOpenChatModal(false)}
+          />
+        )}
       </div>
   );
 }

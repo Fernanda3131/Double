@@ -202,7 +202,7 @@ const Header = ({ setIsLoggedIn }) => {
           className="logout-btn" 
           onClick={handleLogout}
           style={{
-            backgroundColor: '#e74c3c',
+            backgroundColor: '#6b4a2b',
             color: 'white',
             border: 'none',
             padding: '8px 16px',
@@ -212,8 +212,8 @@ const Header = ({ setIsLoggedIn }) => {
             cursor: 'pointer',
             transition: 'all 0.3s ease'
           }}
-          onMouseEnter={(e) => e.target.style.backgroundColor = '#c0392b'}
-          onMouseLeave={(e) => e.target.style.backgroundColor = '#e74c3c'}
+          onMouseEnter={(e) => { e.target.style.backgroundColor = '#6b4a2b'; }}
+          onMouseLeave={(e) => { e.target.style.backgroundColor = '#6b4a2b'; }}
         >
           Cerrar Sesión
         </button>

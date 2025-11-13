@@ -362,7 +362,7 @@ function Chat({ id_destinatario, destinatarioInfo, onBack, mensajeInicial }) {
               }}
             />
             <h3 style={{ fontWeight: 700, fontSize: "1.2rem", margin: 0 }}>
-              {destinatario.username || destinatario.nombre_completo || "Usuario"}
+              {((destinatario.username || destinatario.nombre_completo || "Usuario").charAt(0).toUpperCase() + (destinatario.username || destinatario.nombre_completo || "Usuario").slice(1).toLowerCase())}
             </h3>
           </div>
         ) : (

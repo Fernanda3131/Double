@@ -99,7 +99,7 @@ const HeaderAdmin = ({ setIsLoggedIn }) => {
             fontStyle: 'italic',
             marginLeft: '10px'
           }}
-        >{username || "Administrador"}</span>
+        >{((username || "Administrador").charAt(0).toUpperCase() + (username || "Administrador").slice(1).toLowerCase())}</span>
       </div>
 
       <div 

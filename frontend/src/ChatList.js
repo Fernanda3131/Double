@@ -189,7 +189,7 @@ function ChatList({ onClose }) {
               />
               <div className="conversacion-info">
                 <div className="conversacion-header">
-                  <span className="conversacion-nombre">{usuario.username}</span>
+                  <span className="conversacion-nombre">{usuario.username.charAt(0).toUpperCase() + usuario.username.slice(1).toLowerCase()}</span>
                 </div>
                 <p className="ultimo-mensaje">{usuario.email}</p>
               </div>
@@ -251,7 +251,7 @@ function ChatList({ onClose }) {
                 />
                 <div className="conversacion-info">
                 <div className="conversacion-header">
-                  <span className="conversacion-nombre">{conv.username}</span>
+                  <span className="conversacion-nombre">{conv.username.charAt(0).toUpperCase() + conv.username.slice(1).toLowerCase()}</span>
                   <div className="conversacion-meta">
                     <span className="conversacion-tiempo">
                       {formatearFecha(conv.fecha_ultimo)}

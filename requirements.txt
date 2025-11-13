@@ -1,0 +1,16 @@
+Flask
+flask-cors
+flask-mysqldb
+Flask-Mail
+pymysql
+bcrypt
+reportlab
+Flask-Dance
+requests
+requests-oauthlib
+oauthlib
+gunicorn
+pymongo
+flask-socketio
+eventlet
+python-dotenv

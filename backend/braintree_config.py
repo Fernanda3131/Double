@@ -69,21 +69,12 @@ CVV_RESPONSES = {
     # Cualquier otro: 'M' (coincide)
 }
 
-# Montos de prueba según documentación
-TEST_AMOUNTS = {
-    'authorized': (0.01, 1999.99),
-    'processor_declined': (2000.00, 2999.99),
-    'failed': (3000.00, 3000.99),
-    'settlement_declined': (4001.00, 4001.99),
-}
 
-# Nonces de prueba para diferentes escenarios
+# Nonces mínimos de prueba (sin rangos de monto)
 TEST_NONCES = {
     'valid': 'fake-valid-nonce',
     'visa': 'fake-valid-visa-nonce',
     'mastercard': 'fake-valid-mastercard-nonce',
     'amex': 'fake-valid-amex-nonce',
-    'processor_declined_visa': 'fake-processor-declined-visa-nonce',
-    'processor_declined_mastercard': 'fake-processor-declined-mastercard-nonce',
     'luhn_invalid': 'fake-luhn-invalid-nonce',
 }

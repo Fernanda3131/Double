@@ -6,7 +6,6 @@ CREATE TABLE rol (
     nom_rol VARCHAR(100)
 );
 
-
 CREATE TABLE usuario (
     id_usuario INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100),
@@ -37,7 +36,6 @@ ALTER TABLE usuario MODIFY foto VARCHAR(255) NOT NULL DEFAULT 'default.jpg';
 select * from usuario;
 
 
-
 CREATE TABLE publicacion (
     id_publicacion INT PRIMARY KEY AUTO_INCREMENT,
     descripcion TEXT,
@@ -62,25 +60,24 @@ CREATE TABLE prenda (
     FOREIGN KEY (id_publicacion) REFERENCES publicacion(id_publicacion)
 );
 
-CREATE TABLE pago (
+-- Tabla para almacenar pagos procesados con Braintree
+CREATE TABLE IF NOT EXISTS pago (
     id_pago INT PRIMARY KEY AUTO_INCREMENT,
-    id_usuario INT NOT NULL,
+    id_usuario_comprador INT NOT NULL,
+    id_usuario_vendedor INT NOT NULL,
     id_publicacion INT NOT NULL,
-    monto INT,
-    metodo_pago ENUM("Nequi", "Daviplata", "PSE", "Efecty", "Bancolombia", "Visa", "MasterCard", "Codensa", "Davivienda", "Av Villas"),
-    estado_pago ENUM("PENDIENTE", "PROCESO", "COMPLETADO"),
-    fecha_pago DATETIME,
-    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
+    monto DECIMAL(10,2) NOT NULL,
+    metodo_pago VARCHAR(50) DEFAULT 'braintree',
+    estado_pago VARCHAR(50) DEFAULT 'pendiente',
+    transaction_id VARCHAR(255),
+    fecha_pago DATETIME DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (id_usuario_comprador) REFERENCES usuario(id_usuario),
+    FOREIGN KEY (id_usuario_vendedor) REFERENCES usuario(id_usuario),
     FOREIGN KEY (id_publicacion) REFERENCES publicacion(id_publicacion)
 );
 
 
-CREATE TABLE valoracion (
-    id_valoracion INT PRIMARY KEY AUTO_INCREMENT,
-    usuario_valorado_id INT,
-    puntaje INT CHECK (puntaje BETWEEN 1 AND 5),
-    FOREIGN KEY (usuario_valorado_id) REFERENCES usuario(id_usuario)
-);
 
 INSERT INTO rol (nom_rol) VALUES
 ('Administrador'), ('Usuario');
@@ -166,7 +163,7 @@ SELECT
 FROM publicacion p
 JOIN prenda pr ON p.id_publicacion = pr.id_publicacion;
 
-CREATE OR REPLACE VIEW vista_valoracion AS
+/*CREATE OR REPLACE VIEW vista_valoracion AS
 SELECT 
     u.id_usuario,
     u.nombre AS nombre_usuario,
@@ -174,7 +171,7 @@ SELECT
 FROM usuario u
 LEFT JOIN valoracion v 
        ON u.id_usuario = v.usuario_valorado_id
-GROUP BY u.id_usuario, u.nombre;
+GROUP BY u.id_usuario, u.nombre;*/
 
 
 
@@ -268,7 +265,8 @@ SELECT
     p.talla,
     COUNT(pub.id_publicacion) AS cantidad_publicaciones
 FROM prenda p
-JOIN publicacion pub ON p.id_publicacion = pub.id_publicacion
+JOIN publicacion pub ON
+ p.id_publicacion = pub.id_publicacion
 GROUP BY p.talla
 ORDER BY cantidad_publicaciones DESC;
 
@@ -298,18 +296,4 @@ UNION ALL
 )
 ORDER BY tipo, valor DESC;
 
--- Tabla para tokens de recuperación de contraseña
-CREATE TABLE IF NOT EXISTS tokens_recuperacion (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    id_usuario INT NOT NULL,
-    token VARCHAR(255) NOT NULL UNIQUE,
-    expiracion DATETIME NOT NULL,
-    usado TINYINT(1) DEFAULT 0,
-    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_tokens_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) ON DELETE CASCADE,
-    INDEX idx_token (token),
-    INDEX idx_expiracion (expiracion)
-);
-
--- Opcional: Limpiar tokens expirados periódicamente
--- DELETE FROM tokens_recuperacion WHERE expiracion < NOW() OR usado = 1;
+SELECT * FROM prenda;

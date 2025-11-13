@@ -286,13 +286,9 @@ def process_payment():
     """
     Procesa un pago con Braintree usando payment_method_nonce.
     
-    Montos de prueba (según documentación Braintree):
-    - 0.01 - 1999.99: Autorizado y liquidado
-    - 2000.00 - 2999.99: Rechazado por procesador
-    - 3000.00 - 3000.99: Fallo con respuesta 3000
-    - 4001.00 - 4001.99: Rechazado en liquidación
-    
-    AVS y CVV según valores específicos en documentación.
+    Nota: El sandbox de Braintree puede simular distintos resultados automáticamente
+    según el monto, pero este backend no impone restricciones ni reglas especiales.
+    Cualquier monto recibido se envía tal cual a Braintree.
     """
     try:
         datos = request.json or {}
@@ -401,6 +397,17 @@ def process_payment():
                 sql = f"INSERT INTO pago ({', '.join(insert_cols)}) VALUES ({placeholders})"
                 cursor.execute(sql, tuple(insert_vals))
                 new_id = cursor.lastrowid
+
+                # Marcar publicación como NO disponible (vendida) si existe columna estado
+                try:
+                    cursor.execute("SELECT estado FROM publicacion WHERE id_publicacion = %s", (id_publicacion,))
+                    pub = cursor.fetchone()
+                    if pub is not None:
+                        # Solo actualizar si actualmente está 'Disponible'
+                        if pub.get('estado') == 'Disponible':
+                            cursor.execute("UPDATE publicacion SET estado = %s WHERE id_publicacion = %s", ('Vendida', id_publicacion))
+                except Exception as ex_upd:
+                    print(f"⚠️ No se pudo actualizar estado de publicación {id_publicacion}: {ex_upd}")
             conexion.commit()
             conexion.close()
             
@@ -472,8 +479,8 @@ def process_payment():
                 placeholders = ', '.join(['%s'] * len(insert_cols))
                 sql = f"INSERT INTO pago ({', '.join(insert_cols)}) VALUES ({placeholders})"
                 cursor.execute(sql, tuple(insert_vals))
+                # No marcamos como vendida en casos rechazados
             conexion.commit()
-            conexion.close()
             conexion.close()
             
             return jsonify({
@@ -483,10 +490,17 @@ def process_payment():
             }), 400
             
     except Exception as e:
-        print(f"Error procesando pago: {str(e)}")
+        import traceback
+        print("❌ Excepción en process_payment")
+        print(f"Tipo: {type(e)} | Mensaje: {e}")
+        print(traceback.format_exc())
+        origen = 'desconocido'
+        if 'Already closed' in str(e):
+            origen = 'conexion_mysql'
         return jsonify({
             'success': False,
-            'error': str(e)
+            'error': str(e),
+            'origen': origen
         }), 500
 
 
@@ -498,12 +512,6 @@ def get_test_info():
     return jsonify({
         'test_cards': TEST_CARDS,
         'test_nonces': TEST_NONCES,
-        'test_amounts': {
-            'authorized': '10.00 - 1999.99',
-            'processor_declined': '2000.00 - 2999.99',
-            'failed': '3000.00 - 3000.99',
-            'settlement_declined': '4001.00 - 4001.99'
-        },
         'avs_responses': {
             'postal_code_20000': 'N (No coincide)',
             'postal_code_20001': 'U (No verificado)',

@@ -108,7 +108,7 @@ function PagoTarjeta() {
               placeholder: '123',
             },
             expirationDate: {
-              placeholder: 'MM/YY',
+              placeholder: '', // sin sugerencia fija, acepta cualquier fecha válida
             },
             postalCode: {
               placeholder: 'Código Postal'
@@ -280,13 +280,6 @@ function PagoTarjeta() {
                 <li><code>201</code> - No verificado</li>
                 <li><code>301</code> - Emisor no participa</li>
                 <li>Cualquier otro - Coincide (aprobado)</li>
-              </ul>
-
-              <h3>Montos de Prueba</h3>
-              <ul className="test-list">
-                <li>$0.01 - $1,999.99 - Autorizado</li>
-                <li>$2,000.00 - $2,999.99 - Rechazado</li>
-                <li>$3,000.00 - $3,000.99 - Error</li>
               </ul>
 
               <p className="test-note">

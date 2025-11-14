@@ -95,4 +95,9 @@ app.register_blueprint(usuarios_bp)
 
 # Ejecutar la app
 if __name__ == "__main__":
+    # Mostrar todas las rutas registradas para depuración
+    print("\n=== RUTAS REGISTRADAS EN FLASK ===")
+    for rule in app.url_map.iter_rules():
+        print(f"{rule}")
+    print("=== FIN DE RUTAS ===\n")
     app.run(debug=True, port=5000)

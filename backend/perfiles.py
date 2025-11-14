@@ -1,7 +1,69 @@
+print('>>> Cargando perfiles.py')
+# ==================== CONFIGURACIÓN ====================
+
 from flask import Blueprint, request, session, jsonify, send_from_directory, current_app
 import os
 import pymysql
 from bd import obtener_conexion
+
+perfiles_bp = Blueprint('perfiles', __name__)
+
+def _get_upload_folder():
+    uf = current_app.config.get('UPLOAD_FOLDER') if current_app else None
+    if not uf:
+        uf = os.path.join(os.getcwd(), "uploads")
+    os.makedirs(uf, exist_ok=True)
+    return uf
+
+# ==================== API Comunidad ====================
+@perfiles_bp.route('/api/estadisticas_comunidad', methods=['GET'])
+def estadisticas_comunidad():
+    print('>>> Endpoint /api/estadisticas_comunidad registrado')
+    """Devuelve estadísticas globales de la comunidad: usuarios activos, prendas activas, prendas para intercambio activas y cantidad de intercambios del mes."""
+    conexion = obtener_conexion()
+    try:
+        with conexion.cursor() as cursor:
+            # Usuarios activos (cuenta todos los usuarios)
+            cursor.execute("SELECT COUNT(*) AS total FROM usuario")
+            usuarios = cursor.fetchone()["total"]
+
+            # Prendas activas (todas las prendas activas)
+            cursor.execute("SELECT COUNT(*) AS total FROM prenda WHERE estado_prenda = 'activo'")
+            prendas_activas = cursor.fetchone()["total"]
+
+            # Prendas para intercambio activas
+            cursor.execute("""
+                SELECT COUNT(*) AS total FROM publicacion p
+                JOIN prenda pr ON p.id_prenda = pr.id_prenda
+                WHERE p.tipo_publicacion = 'intercambio' AND pr.estado_prenda = 'activo'
+            """)
+            prendas_intercambio_activas = cursor.fetchone()["total"]
+
+            # Intercambios este mes (publicaciones de tipo 'intercambio' creadas este mes)
+            cursor.execute("""
+                SELECT COUNT(*) AS total FROM publicacion
+                WHERE tipo_publicacion = 'intercambio'
+                AND MONTH(fecha_creacion) = MONTH(CURDATE())
+                AND YEAR(fecha_creacion) = YEAR(CURDATE())
+            """)
+            intercambios_mes = cursor.fetchone()["total"]
+
+        return jsonify({
+            "usuarios_activos": usuarios,
+            "prendas_activas": prendas_activas,
+            "prendas_intercambio_activas": prendas_intercambio_activas,
+            "intercambios_mes": intercambios_mes
+        })
+    except Exception as e:
+        return jsonify({
+            "usuarios_activos": 0,
+            "prendas_activas": 0,
+            "prendas_intercambio_activas": 0,
+            "intercambios_mes": 0,
+            "error": str(e)
+        }), 500
+    finally:
+        conexion.close()
 
 # ==================== CONFIGURACIÓN ====================
 perfiles_bp = Blueprint('perfiles', __name__)
@@ -107,7 +169,8 @@ def obtener_datos_perfil(id_usuario):
                     email AS email_usuario,
                     foto AS foto_usuario,
                     talla,
-                    fecha_nacimiento
+                    fecha_nacimiento,
+                    creado_en
                 FROM usuario
                 WHERE id_usuario = %s
                 """,
@@ -137,8 +200,9 @@ def obtener_datos_perfil(id_usuario):
         "username_usuario": datos_usuario["username_usuario"] or "",
         "email_usuario": datos_usuario["email_usuario"] or "",
         "foto_usuario": datos_usuario["foto_usuario"] or "default.jpg",
-        "talla": datos_usuario["talla"] or "",
+        "talla_usuario": datos_usuario["talla"] or "",
         "fecha_nacimiento": str(datos_usuario["fecha_nacimiento"]) if datos_usuario.get("fecha_nacimiento") else "",
+        "creado_en": str(datos_usuario["creado_en"]) if datos_usuario.get("creado_en") else "",
         "promedio_valoracion": promedio_valoracion,
         "prendas": []
     }

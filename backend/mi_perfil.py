@@ -55,6 +55,7 @@ def obtener_perfil(id_usuario):
                     u.fecha_nacimiento AS fecha_nacimiento,
                     u.talla AS talla_usuario,
                     u.foto AS foto_usuario,
+                    u.creado_en AS creado_en,
                     p.id_publicacion,
                     pr.id_prenda,
                     pr.nombre AS nombre_prenda,
@@ -90,6 +91,18 @@ def obtener_perfil(id_usuario):
             elif fecha_nac:
                 fecha_nac = str(fecha_nac)
             
+            # Convertir creado_en a string si es necesario
+            creado_en = perfil[0].get('creado_en', None)
+            print(f"🔍 DEBUG - creado_en raw: {creado_en}, tipo: {type(creado_en)}")
+            
+            if creado_en:
+                if hasattr(creado_en, 'isoformat'):
+                    creado_en = creado_en.isoformat()
+                else:
+                    creado_en = str(creado_en)
+            
+            print(f"🔍 DEBUG - creado_en procesado: {creado_en}")
+            
             usuario = {
                 'id_usuario': perfil[0]['id_usuario'],
                 'PrimerNombre': perfil[0]['PrimerNombre'],
@@ -101,9 +114,12 @@ def obtener_perfil(id_usuario):
                 'fecha_nacimiento': fecha_nac,
                 'talla_usuario': perfil[0]['talla_usuario'],
                 'foto_usuario': perfil[0]['foto_usuario'],
+                'creado_en': creado_en,
                 'promedio_valoracion': perfil[0]['promedio_valoracion'],
                 'prendas': []
             }
+            
+            print(f"🔍 DEBUG - usuario dict creado_en: {usuario.get('creado_en')}")
 
             # Agregar prendas si existen
             for row in perfil:

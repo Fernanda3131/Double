@@ -1,9 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import "./CalcularValorPrenda.css";
 
 export default function CalculadoraPrendas() {
-  const navigate = useNavigate();
   const [marca, setMarca] = useState(3);
   const [calidad, setCalidad] = useState(3);
   const [valorOriginal, setValorOriginal] = useState("");
@@ -17,13 +15,14 @@ export default function CalculadoraPrendas() {
       return;
     }
 
-    const factorMarca = 0.15 + marca * 0.05;
-    const factorCalidad = 0.20 + calidad * 0.10;
-    const factorUso = 1 - uso * 0.05;
+    // ✨ NUEVA FÓRMULA MEJORADA - más realista y balanceada
+    const valorBase = parseFloat(valorOriginal) * (0.40 + marca * 0.08);
+    const ajusteCalidad = 1 + (calidad - 3) * 0.10;   // +/- según estado
+    const ajusteUso = 1 - (uso - 1) * 0.07;           // baja lento
 
-    const valorEstimado = parseFloat(valorOriginal) * factorMarca * factorCalidad * factorUso;
+    const valorEstimado = valorBase * ajusteCalidad * ajusteUso;
     const minimoVal = parseFloat(minimo) || 0;
-    const precioFinal = Math.max(valorEstimado, minimoVal);
+    const precioFinal = Math.max(valorEstimado, minimoVal * 0.7);
 
     setResultado(precioFinal);
   };
@@ -31,10 +30,6 @@ export default function CalculadoraPrendas() {
   return (
     <div className="calculadora-container">
       <div className="calculadora-wrapper">
-        <button className="calculadora-volver" onClick={() => navigate(-1)}>
-          ← Volver
-        </button>
-
         <h1 className="calculadora-titulo">Calculadora Double P</h1>
         <p className="calculadora-subtitulo">
           Calcula el valor estimado de tus prendas de forma inteligente

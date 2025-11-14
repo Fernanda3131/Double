@@ -16,6 +16,15 @@ function MiPerfil() {
   const [isEditMode, setIsEditMode] = useState(false); // Modo de edición
   const [editForm, setEditForm] = useState({}); // Formulario de edición
   const [editPhoto, setEditPhoto] = useState(null); // Nueva foto
+  
+  // Estados para la calculadora
+  const [marca, setMarca] = useState(3);
+  const [calidad, setCalidad] = useState(3);
+  const [valorOriginal, setValorOriginal] = useState("");
+  const [uso, setUso] = useState(3);
+  const [minimo, setMinimo] = useState("");
+  const [resultado, setResultado] = useState(null);
+  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -122,6 +131,7 @@ function MiPerfil() {
 
   const procesarDatosPerfil = (data) => {
     console.log("📝 Procesando datos del perfil:", data);
+    console.log("📅 Campo creado_en recibido:", data.perfil?.creado_en);
     if (data.perfil) {
       setPerfil(data.perfil);
       setRating(Number(data.perfil.promedio_valoracion) || 0);
@@ -136,7 +146,6 @@ function MiPerfil() {
   // Función para manejar el clic en una estrella (simplificada - solo visual)
   const handleStarClick = (starValue) => {
     if (isOwnProfile) {
-      alert("No puedes valorarte a ti mismo");
       return;
     }
 
@@ -256,6 +265,34 @@ function MiPerfil() {
       console.error('❌ Error al guardar cambios:', error);
       alert('❌ Error al guardar los cambios');
     }
+  };
+
+  // Función para calcular precio con la nueva fórmula mejorada
+  const calcularPrecio = () => {
+    if (!valorOriginal || valorOriginal <= 0) {
+      alert("Por favor ingresa un valor original válido");
+      return;
+    }
+
+    // ✨ NUEVA FÓRMULA MEJORADA - más realista y balanceada
+    const valorBase = parseFloat(valorOriginal) * (0.40 + marca * 0.08);
+    const ajusteCalidad = 1 + (calidad - 3) * 0.10;   // +/- según estado
+    const ajusteUso = 1 - (uso - 1) * 0.07;           // baja lento
+
+    const valorEstimado = valorBase * ajusteCalidad * ajusteUso;
+    const minimoVal = parseFloat(minimo) || 0;
+    const precioFinal = Math.max(valorEstimado, minimoVal * 0.7);
+
+    setResultado(precioFinal);
+  };
+
+  const limpiarCalculadora = () => {
+    setMarca(3);
+    setCalidad(3);
+    setValorOriginal("");
+    setUso(3);
+    setMinimo("");
+    setResultado(null);
   };
 
   // Función para manejar click en prendas según el modo
@@ -422,10 +459,6 @@ function MiPerfil() {
                 {/* Información de contacto estilo profesional */}
                 <div className="sidebar-contact-info">
                   <div className="contact-item">
-                    <div className="contact-icon">📍</div>
-                    <span className="contact-text">Colombia</span>
-                  </div>
-                  <div className="contact-item">
                     <div className="contact-icon">📧</div>
                     {isEditMode ? (
                       <input
@@ -469,20 +502,40 @@ function MiPerfil() {
                         onChange={(e) => handleInputChange('fecha_nacimiento', e.target.value)}
                       />
                     ) : (
-                      <span className="contact-text">Miembro desde {perfil.fecha_nacimiento ? new Date(perfil.fecha_nacimiento).getFullYear() : "2024"}</span>
+                      <span className="contact-text">
+                        Miembro desde {(() => {
+                          console.log('📅 creado_en completo:', perfil.creado_en);
+                          
+                          if (!perfil.creado_en) {
+                            return "2024";
+                          }
+                          
+                          try {
+                            // Manejar formato MySQL: "2025-11-13 07:07:46"
+                            let fechaStr = perfil.creado_en;
+                            
+                            // Si tiene espacio, tomar solo la fecha
+                            if (fechaStr.includes(' ')) {
+                              fechaStr = fechaStr.split(' ')[0];
+                            }
+                            
+                            const fecha = new Date(fechaStr);
+                            console.log('📅 fecha parseada:', fecha);
+                            
+                            const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 
+                                          'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+                            
+                            const resultado = `${meses[fecha.getMonth()]} ${fecha.getFullYear()}`;
+                            console.log('📅 resultado final:', resultado);
+                            
+                            return resultado;
+                          } catch (error) {
+                            console.error('❌ Error parseando fecha:', error);
+                            return "2024";
+                          }
+                        })()}
+                      </span>
                     )}
-                  </div>
-                </div>
-
-                {/* Stats en grid */}
-                <div className="sidebar-stats">
-                  <div className="stat-card">
-                    <span className="stat-number">{perfil.prendas ? perfil.prendas.length : 0}</span>
-                    <span className="stat-label">Prendas Activas</span>
-                  </div>
-                  <div className="stat-card">
-                    <span className="stat-number">0</span>
-                    <span className="stat-label">Intercambios</span>
                   </div>
                 </div>
 
@@ -737,19 +790,108 @@ function MiPerfil() {
           <div className="bottom-sidebar-content">
             <div className="calculator-card">
               <div className="calculator-content">
-                <h3 className="calculator-title">🧮 Calculadora Double P</h3>
+                <h5 className="calculator-title" style={{ fontSize: '1.1rem', whiteSpace: 'nowrap', fontWeight: 700, margin: 0 }}>
+                  🧮 Calculadora Double P
+                </h5>
                 <p className="calculator-description">
                   Calcula el valor estimado de tus prendas y descubre oportunidades de intercambio perfectas.
                 </p>
-                <button className="calculate-btn" onClick={() => navigate("/calculadora")}>
-                  Calcular Valor de Prenda
-                </button>
+                
+                <div className="calculator-form">
+                  <div className="calculator-field">
+                    <label className="calculator-label">Marca (1 a 5)</label>
+                    <select
+                      className="calculator-select"
+                      value={marca}
+                      onChange={(e) => setMarca(parseInt(e.target.value))}
+                    >
+                      <option value="1">⭐ 1 - Económica</option>
+                      <option value="2">⭐⭐ 2 - Básica</option>
+                      <option value="3">⭐⭐⭐ 3 - Media</option>
+                      <option value="4">⭐⭐⭐⭐ 4 - Reconocida</option>
+                      <option value="5">⭐⭐⭐⭐⭐ 5 - Premium/Lujo</option>
+                    </select>
+                  </div>
+
+                  <div className="calculator-field">
+                    <label className="calculator-label">Calidad / Estado (1 a 5)</label>
+                    <select
+                      className="calculator-select"
+                      value={calidad}
+                      onChange={(e) => setCalidad(parseInt(e.target.value))}
+                    >
+                      <option value="1">1 - Muy deteriorada</option>
+                      <option value="2">2 - Desgastada</option>
+                      <option value="3">3 - Buen estado</option>
+                      <option value="4">4 - Muy buen estado</option>
+                      <option value="5">5 - Como nueva / Sin usar</option>
+                    </select>
+                  </div>
+
+                  <div className="calculator-field">
+                    <label className="calculator-label">Valor Original (COP)</label>
+                    <input
+                      type="number"
+                      className="calculator-input"
+                      value={valorOriginal}
+                      onChange={(e) => setValorOriginal(e.target.value)}
+                      placeholder="Ej: 150000"
+                      min="0"
+                    />
+                  </div>
+
+                  <div className="calculator-field">
+                    <label className="calculator-label">Nivel de Uso (1 a 5)</label>
+                    <select
+                      className="calculator-select"
+                      value={uso}
+                      onChange={(e) => setUso(parseInt(e.target.value))}
+                    >
+                      <option value="1">1 - Prácticamente sin usar</option>
+                      <option value="2">2 - Poco uso</option>
+                      <option value="3">3 - Uso normal</option>
+                      <option value="4">4 - Bastante uso</option>
+                      <option value="5">5 - Muy usada</option>
+                    </select>
+                  </div>
+
+                  <div className="calculator-field">
+                    <label className="calculator-label">Precio Mínimo Deseado (COP) - Opcional</label>
+                    <input
+                      type="number"
+                      className="calculator-input"
+                      value={minimo}
+                      onChange={(e) => setMinimo(e.target.value)}
+                      placeholder="Ej: 30000"
+                      min="0"
+                    />
+                  </div>
+
+                  <button onClick={calcularPrecio} className="calculate-btn">
+                    CALCULAR PRECIO →
+                  </button>
+
+                  {resultado !== null && (
+                    <>
+                      <div className="calculator-result">
+                        <p className="result-text">PRECIO ESTIMADO</p>
+                        <p className="result-value">
+                          ${resultado.toLocaleString("es-CO")} COP
+                        </p>
+                      </div>
+                      
+                      <button onClick={limpiarCalculadora} className="calculate-btn-secondary">
+                        LIMPIAR
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
 
             <div className="tips-card">
               <div className="tips-content">
-                <h3 className="tips-title">💡 Consejos Double P</h3>
+                <h3 className="tips-title">💡 P-Tips</h3>
                 <div className="tip-item">
                   <span className="tip-icon">🌱</span>
                   <p>Intercambia prendas para un closet más sostenible</p>
@@ -766,31 +908,41 @@ function MiPerfil() {
                   <span className="tip-icon">⭐</span>
                   <p>Valora a otros usuarios después de cada intercambio</p>
                 </div>
+                <div className="tip-item">
+                  <span className="tip-icon">🔄</span>
+                  <p>Explora nuevas marcas y estilos</p>
+                </div>
+                <div className="tip-item">
+                  <span className="tip-icon">🧼</span>
+                  <p>Lava y cuida tus prendas antes de intercambiarlas</p>
+                </div>
+                <div className="tip-item">
+                  <span className="tip-icon">📦</span>
+                  <p>Empaca tus prendas de forma segura</p>
+                </div>
               </div>
             </div>
 
-            <div className="community-card">
+            {/* Panel de comunidad con guía de tallas estilizada */}
+            <div className="community-card" style={{background: '#f9f7f3', borderRadius: '16px', boxShadow: '0 2px 8px #0001', padding: '28px 22px', marginBottom: 32, maxWidth: 420, marginLeft: 'auto', marginRight: 'auto'}}>
               <div className="community-content">
-                <h3 className="community-title">🌍 Comunidad Double P</h3>
-                <p className="community-description">
-                  Únete a nuestra comunidad global de intercambio sostenible.
+                <h3 className="community-title" style={{fontSize: '1.4rem', fontWeight: 700, color: '#222', marginBottom: 8}}>🧵 Cómo Elegir Tallas</h3>
+                <p style={{fontSize: '1rem', color: '#222', marginBottom: 12, fontWeight: 500}}>
+                  Elegir la talla correcta te ayuda a encontrar prendas que se ajusten mejor a tu cuerpo y evitar devoluciones innecesarias.
                 </p>
-                <div className="community-stats">
-                  <div className="community-stat">
-                    <span className="community-number">1,234</span>
-                    <span className="community-label">Usuarios Activos</span>
+                <div className="talla-guide" style={{background: '#fffbe9', borderRadius: 10, padding: 18, border: '1px solid #e6d7b6'}}>
+                  <p style={{fontWeight: 600, color: '#a07e44', marginBottom: 10}}>Antes de intercambiar o comprar, ten en cuenta:</p>
+                  <ul style={{paddingLeft: 22, margin: 0, color: '#5a4a2a', fontSize: '0.98rem', lineHeight: 1.7}}>
+                    <li>📏 <b>Mide tu cuerpo</b> (busto, cintura y cadera) con una cinta métrica.</li>
+                    <li>📊 <b>Compara tus medidas</b> con la guía de tallas que usa la prenda.</li>
+                    <li>🧵 <b>Revisa el tipo de tela</b>: las rígidas tallan justo; las elásticas dan más margen.</li>
+                    <li>🏷️ <b>Ten en cuenta la marca</b>: algunas suelen ser más pequeñas o más grandes.</li>
+                    <li>👚 <b>Observa el fit</b>: si la prenda es “oversize”, “slim” o “regular”, puede cambiar la sensación de talla.</li>
+                    <li>❓ <b>Pregunta al dueño original</b> si la talla le queda como dice la etiqueta.</li>
+                  </ul>
+                  <div style={{marginTop: 16, color: '#6b4f1d', fontWeight: 500, fontSize: '1rem', textAlign: 'center'}}>
+                    Así podrás elegir prendas que te queden mejor y disfrutar más el intercambio.
                   </div>
-                  <div className="community-stat">
-                    <span className="community-number">5,678</span>
-                    <span className="community-label">Prendas Disponibles</span>
-                  </div>
-                  <div className="community-stat">
-                    <span className="community-number">890</span>
-                    <span className="community-label">Intercambios Este Mes</span>
-                  </div>
-                  <button className="community-btn" onClick={() => navigate("/")}>
-                    Explorar Comunidad
-                  </button>
                 </div>
               </div>
             </div>

@@ -741,7 +741,7 @@ function MiPerfil() {
                 <p className="calculator-description">
                   Calcula el valor estimado de tus prendas y descubre oportunidades de intercambio perfectas.
                 </p>
-                <button className="calculate-btn" onClick={() => navigate("/agregar")}>
+                <button className="calculate-btn" onClick={() => navigate("/calculadora")}>
                   Calcular Valor de Prenda
                 </button>
               </div>

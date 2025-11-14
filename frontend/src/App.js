@@ -18,6 +18,7 @@ import GestionarPublicacionesAdmin from "./GestionarPublicacionesAdmin";
 import GestionUsuarios from "./GestionUsuarios";
 import GestionPagos from "./GestionPagos";
 import PagoTarjeta from "./PagoTarjeta";
+import CalculadoraPrendas from "./CalcularValorPrenda";
 import Configuracion from "./Configuracion";
 import Verificar from "./Verificar";
 import MensajeAdmin from "./MensajeAdmin";
@@ -365,6 +366,18 @@ function App() {
                 <PrivateRoute isLoggedIn={isLoggedIn}>
                   <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
                     <PagoTarjeta />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
+
+            {/* Calculadora de valor de prendas */}
+            <Route
+              path="/calculadora"
+              element={
+                <PrivateRoute isLoggedIn={isLoggedIn}>
+                  <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
+                    <CalculadoraPrendas />
                   </Layout>
                 </PrivateRoute>
               }

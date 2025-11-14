@@ -4,6 +4,7 @@ import pymysql
 def obtener_conexion():
     return pymysql.connect(
         host="localhost",
+        port=3307,
         user="root",      # tu usuario
         password="",      # sin contraseña
         db="double_p",    # tu base de datos

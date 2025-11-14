@@ -333,7 +333,7 @@ function Chat({ id_destinatario, destinatarioInfo, onBack, mensajeInicial }) {
             flexShrink: 0,
           }}
         >
-          ← mensa
+          ← mensajes
         </button>
       )}
 

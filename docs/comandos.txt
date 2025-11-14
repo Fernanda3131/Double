@@ -14,6 +14,7 @@ pip install gunicorn
 pip install pymongo 
 pip install flask-socketio
 pip install eventlet
+pip install braintree
 ------ en frontend
 npm install 
 npm install react-router-dom

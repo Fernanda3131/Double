@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, Blueprint
 from flask_cors import CORS
 import os
 from flask_mysqldb import MySQL
@@ -39,6 +39,7 @@ def uploaded_file(filename):
 
 # Configuración MySQL
 app.config["MYSQL_HOST"] = "localhost"
+app.config["MYSQL_PORT"] = 3307
 app.config["MYSQL_USER"] = "root"
 app.config["MYSQL_PASSWORD"] = ""
 app.config["MYSQL_DB"] = "Double_P"
@@ -77,10 +78,10 @@ app.register_blueprint(login_bp)
 app.register_blueprint(detalle_prenda_bp)
 app.register_blueprint(agregar_publicacion_bp)
 app.register_blueprint(admin_home_bp)
+app.register_blueprint(pagos_bp)
 app.register_blueprint(mi_perfil_bp)
 app.register_blueprint(editar_perfil_bp)
 app.register_blueprint(gestion_prendas_bp)
-app.register_blueprint(pagos_bp)
 app.register_blueprint(estadistica_tallas_bp)
 app.register_blueprint(prendas_talla_bp)
 app.register_blueprint(peores_valoraciones_bp)

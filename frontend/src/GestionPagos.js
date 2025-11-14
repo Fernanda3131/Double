@@ -296,4 +296,6 @@ function GestionPagos() {
   );
 }
 
+
 export default GestionPagos;
+

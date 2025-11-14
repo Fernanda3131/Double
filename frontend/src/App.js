@@ -27,6 +27,7 @@ import PreguntasFrecuentes from "./PreguntasFrecuentes";
 import Contactanos from "./Contactanos";
 import ChatList from "./ChatList";
 import ChatModal from "./ChatModal";
+import PagoTarjeta from "./PagoTarjeta";
 
 import Header from "./Header";
 import HeaderAdmin from "./HeaderAdmin";
@@ -357,6 +358,17 @@ function App() {
                     <GestionUsuarios />
                   </AdminLayout>
                 </AdminRoute>
+              }
+            />
+
+            <Route
+              path="/pago-tarjeta" 
+              element={
+                <PrivateRoute isLoggedIn={isLoggedIn}>
+                  <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
+                    <PagoTarjeta />
+                  </Layout>
+                </PrivateRoute>
               }
             />
 

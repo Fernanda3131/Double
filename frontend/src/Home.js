@@ -342,104 +342,98 @@ export default function Home() {
         </div>
       </div>
 
-      {/* 🔎 Filtros desplegables */}
+      {/* 🔎 Filtros y barra de búsqueda */}
       <div className="filtros-dropdown-wrapper">
-        <div 
-          className="filtros-dropdown-trigger"
-          onClick={() => setMostrarFiltros(!mostrarFiltros)}
-        >
-          <span>Filtrar</span>
-          <svg 
-            width="16" 
-            height="16" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2"
-            style={{ transform: mostrarFiltros ? 'rotate(180deg)' : 'rotate(0deg)' }}
-          >
-            <polyline points="6,9 12,15 18,9"></polyline>
-          </svg>
-        </div>
-        
-        {mostrarFiltros && (
-          <div className={`filtros-dropdown-content ${mostrarFiltros ? 'show' : ''}`}>
-            <div className="filtros-titulo">
-              <h3>🔍 Encuentra tu prenda perfecta</h3>
-              <p>Utiliza los filtros para personalizar tu búsqueda</p>
+        <div className="filtros-top-row" style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          {/* Bloque perfectamente centrado */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '520px', maxWidth: '800px', width: '100%' }}>
+            <div
+              className="filtros-dropdown-trigger"
+              onClick={() => setMostrarFiltros(!mostrarFiltros)}
+              style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', marginRight: '6px' }}
+            >
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6B5B43" strokeWidth="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+              </svg>
             </div>
-            
-            <div className="filtros-container">
-            <div className="filtro-item">
-              <label>Buscar por nombre</label>
+            <span style={{ fontSize: '22px', color: '#6B5B43', margin: '0 8px 0 0' }}>&gt;</span>
+            <div className="busqueda-container" style={{ flex: 1, minWidth: '420px', maxWidth: '700px', borderRadius: '22px', background: '#bfa06a', padding: '0 18px', display: 'flex', alignItems: 'center', height: '40px', marginLeft: '0' }}>
               <input
                 type="text"
-                placeholder="¿Qué estás buscando?"
+                className="busqueda-input"
+                placeholder="Barra de busqueda"
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
+                style={{ width: '100%', border: 'none', outline: 'none', background: 'transparent', fontWeight: 'bold', fontSize: '20px', color: '#2d210c', textAlign: 'left' }}
               />
-              <div className="filtro-indicator"></div>
-            </div>
-
-            <div className="filtro-item">
-              <label>Tipo de publicación</label>
-              <select
-                value={filtroIntercambio}
-                onChange={(e) => setFiltroIntercambio(e.target.value)}
-              >
-                <option value="">Todos los tipos</option>
-                <option value="intercambio">Solo intercambio</option>
-                <option value="venta">Solo venta</option>
-              </select>
-              <div className="filtro-indicator"></div>
-            </div>
-
-            <div className="filtro-item">
-              <label>Talla</label>
-              <select
-                value={filtroTalla}
-                onChange={(e) => setFiltroTalla(e.target.value)}
-              >
-                <option value="">Todas las tallas</option>
-                <option value="S">S</option>
-                <option value="M">M</option>
-                <option value="L">L</option>
-                <option value="XL">XL</option>
-                <option value="XXL">XXL</option>
-              </select>
-              <div className="filtro-indicator"></div>
-            </div>
-
-            <div className="filtro-item">
-              <label>Rango de precio</label>
-              <select
-                value={filtroPrecio}
-                onChange={(e) => setFiltroPrecio(e.target.value)}
-              >
-                <option value="">Todos los precios</option>
-                <option value="menor_50">Menor a $50.000</option>
-                <option value="mayor_10">Mayor a $10.000</option>
-                <option value="rango">Entre $10.000 y $50.000</option>
-              </select>
-              <div className="filtro-indicator"></div>
             </div>
           </div>
-          
-          {/* Botón limpiar filtros */}
-          {hayFiltrosActivos && (
-            <div className="filtros-actions">
-              <button className="limpiar-filtros-btn" onClick={limpiarFiltros}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M3 6h18"/>
-                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
-                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
-                  <line x1="10" y1="11" x2="10" y2="17"/>
-                  <line x1="14" y1="11" x2="14" y2="17"/>
-                </svg>
-                Limpiar filtros
-              </button>
+        </div>
+
+        {/* Dropdown de filtros */}
+        {mostrarFiltros && (
+          <div className={`filtros-dropdown-content ${mostrarFiltros ? 'show' : ''}`}> 
+            <div className="filtros-container">
+              <div className="filtro-item">
+                <label>Tipo de publicación</label>
+                <select
+                  value={filtroIntercambio}
+                  onChange={(e) => setFiltroIntercambio(e.target.value)}
+                >
+                  <option value="">Todos los tipos</option>
+                  <option value="intercambio">Solo intercambio</option>
+                  <option value="venta">Solo venta</option>
+                </select>
+                <div className="filtro-indicator"></div>
+              </div>
+
+              <div className="filtro-item">
+                <label>Talla</label>
+                <select
+                  value={filtroTalla}
+                  onChange={(e) => setFiltroTalla(e.target.value)}
+                >
+                  <option value="">Todas las tallas</option>
+                  <option value="S">S</option>
+                  <option value="M">M</option>
+                  <option value="L">L</option>
+                  <option value="XL">XL</option>
+                  <option value="XXL">XXL</option>
+                </select>
+                <div className="filtro-indicator"></div>
+              </div>
+
+              <div className="filtro-item">
+                <label>Rango de precio</label>
+                <select
+                  value={filtroPrecio}
+                  onChange={(e) => setFiltroPrecio(e.target.value)}
+                >
+                  <option value="">Todos los precios</option>
+                  <option value="menor_50">Menor a $50.000</option>
+                  <option value="mayor_10">Mayor a $10.000</option>
+                  <option value="rango">Entre $10.000 y $50.000</option>
+                </select>
+                <div className="filtro-indicator"></div>
+              </div>
             </div>
-          )}
+
+            {/* Botón limpiar filtros */}
+            {hayFiltrosActivos && (
+              <div className="filtros-actions">
+                <button className="limpiar-filtros-btn" onClick={limpiarFiltros}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M3 6h18"/>
+                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                    <line x1="10" y1="11" x2="10" y2="17"/>
+                    <line x1="14" y1="11" x2="14" y2="17"/>
+                  </svg>
+                  Limpiar filtros
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

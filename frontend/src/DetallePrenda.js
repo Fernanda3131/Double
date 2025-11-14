@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ChatModal from "./ChatModal"; // 🔸Comentado temporalmente
+import BotonPagar from "./BotonPagar";
 import "./DetallePrenda.css";
 
 function DetallePrenda() {
@@ -118,6 +119,15 @@ function DetallePrenda() {
               </span>
             ))}
           </div>
+
+          {prenda.tipo_publicacion?.toLowerCase() === 'venta' && prenda.valor && (
+              <BotonPagar 
+                amount={parseFloat(prenda.valor)}
+                id_publicacion={prenda.id_publicacion || id}
+                descripcion={`Compra de ${prenda.nombre}`}
+                className="small"
+              />
+            )}
 
           <button
             className="detalle-prenda-mensaje-btn-publicacion"

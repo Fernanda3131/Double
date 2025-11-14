@@ -5,14 +5,10 @@ from bd import obtener_conexion
 
 detalle_prenda_bp = Blueprint('detalle_prenda_bp', __name__)
 
-
 from flask import session
+
 # Endpoint para editar prenda (solo dueño)
 @detalle_prenda_bp.route('/api/detalle_prenda/<int:id_prenda>', methods=['PUT'])
-def editar_prenda(id_prenda):
-    id_usuario = session.get('id_usuario')
-    if not id_usuario:
-        return jsonify({'status': 'error', 'message': 'No autenticado'}), 401
 def editar_prenda(id_prenda):
     id_usuario = session.get('id_usuario')
     if not id_usuario:
@@ -163,6 +159,7 @@ def api_publicaciones():
                     valor,
                     id_usuario
                 FROM catalogo
+                WHERE estado = 'Disponible'
                 ORDER BY id_publicacion DESC
             """)
             publicaciones = cursor.fetchall()

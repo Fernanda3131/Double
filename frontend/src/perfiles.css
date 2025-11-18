@@ -1350,6 +1350,122 @@ body {
   margin-left: 8px;
 }
 
+/* Estilos para la calculadora integrada */
+.calculator-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 20px;
+  text-align: left;
+}
+
+.calculator-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.calculator-label {
+  font-family: "League Gothic", sans-serif;
+  font-size: 14px;
+  color: #48392e;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.calculator-select,
+.calculator-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #e0d8cc;
+  border-radius: 8px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 13px;
+  background: #fafafa;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.calculator-select:focus,
+.calculator-input:focus {
+  outline: none;
+  border-color: #95742d;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(149, 116, 45, 0.1);
+}
+
+.calculator-input::-webkit-inner-spin-button,
+.calculator-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.calculator-input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.calculator-result {
+  background: linear-gradient(135deg, #f5f2ed 0%, #ede8df 100%);
+  border: 2px solid #95742d;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  margin-top: 15px;
+  animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.result-text {
+  font-family: 'League Gothic', sans-serif;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.result-value {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 28px;
+  color: #95742d;
+  font-weight: 700;
+  margin: 0;
+}
+
+.calculate-btn-secondary {
+  background: transparent;
+  color: #95742d;
+  border: 2px solid #95742d;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  font-family: "League Gothic", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.calculate-btn-secondary:hover {
+  background: #95742d;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(149, 116, 45, 0.3);
+}
+
 /* Content Posts Styling */
 .timeline-content {
   margin-top: 30px;

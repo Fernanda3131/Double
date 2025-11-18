@@ -94,137 +94,55 @@ function EditarPerfil() {
     <div className="editar-perfil">
       <div className="perfil-card">
         <h3>Editar Perfil</h3>
-
-        <form onSubmit={handleSubmit} encType="multipart/form-data" autoComplete="off">
+        <form className="perfil-form-grid" onSubmit={handleSubmit} encType="multipart/form-data" autoComplete="off">
           {/* Inputs ocultos para evitar autocompletado */}
           <input type="text" name="fakeuser" style={{ display: "none" }} autoComplete="username" />
           <input type="password" name="fakepass" style={{ display: "none" }} autoComplete="new-password" />
-
-          <div className="form-group">
-            <label>Primer Nombre:</label>
-            <input
-              type="text"
-              name="primer_nombre"
-              value={primerNombre}
-              onChange={(e) => setPrimerNombre(e.target.value)}
-              placeholder="Primer nombre"
-            />
+          <div className="form-col">
+            <div className="form-group">
+              <label>Primer Nombre:</label>
+              <input type="text" name="primer_nombre" value={primerNombre} onChange={(e) => setPrimerNombre(e.target.value)} placeholder="Primer nombre" />
+            </div>
+            <div className="form-group">
+              <label>Segundo Nombre (Opcional):</label>
+              <input type="text" name="segundo_nombre" value={segundoNombre} onChange={(e) => setSegundoNombre(e.target.value)} placeholder="Segundo nombre (opcional)" />
+            </div>
+            <div className="form-group">
+              <label>Primer Apellido:</label>
+              <input type="text" name="primer_apellido" value={primerApellido} onChange={(e) => setPrimerApellido(e.target.value)} placeholder="Primer apellido" />
+            </div>
+            <div className="form-group">
+              <label>Segundo Apellido (Opcional):</label>
+              <input type="text" name="segundo_apellido" value={segundoApellido} onChange={(e) => setSegundoApellido(e.target.value)} placeholder="Segundo apellido (opcional)" />
+            </div>
           </div>
-
-          <div className="form-group">
-            <label>Segundo Nombre (Opcional):</label>
-            <input
-              type="text"
-              name="segundo_nombre"
-              value={segundoNombre}
-              onChange={(e) => setSegundoNombre(e.target.value)}
-              placeholder="Segundo nombre (opcional)"
-            />
+          <div className="form-col">
+            <div className="form-group">
+              <label>Email:</label>
+              <input type="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Correo electrónico" />
+            </div>
+            <div className="form-group">
+              <label>Fecha de Nacimiento:</label>
+              <input type="date" name="fecha_nacimiento" value={fechaNacimiento} onChange={(e) => setFechaNacimiento(e.target.value)} />
+            </div>
+            <div className="form-group">
+              <label>Talla:</label>
+              <input type="text" name="talla" value={talla} onChange={(e) => setTalla(e.target.value)} placeholder="Talla" />
+            </div>
+            <div className="form-group">
+              <label>Contraseña nueva:</label>
+              <input type="password" name="contrasena" value={contrasena} onChange={(e) => setContrasena(e.target.value)} placeholder="Deja vacío si no quieres cambiarla" autoComplete="new-password" />
+            </div>
+            <div className="form-group">
+              <label>Foto de perfil:</label>
+              <input type="file" name="foto" onChange={(e) => setFoto(e.target.files[0])} accept="image/*" />
+            </div>
           </div>
-
-          <div className="form-group">
-            <label>Primer Apellido:</label>
-            <input
-              type="text"
-              name="primer_apellido"
-              value={primerApellido}
-              onChange={(e) => setPrimerApellido(e.target.value)}
-              placeholder="Primer apellido"
-            />
+          <div className="form-actions">
+            <button type="submit" className="boton-guardar">GUARDAR</button>
+            <button type="button" className="volver-btn" title="Volver al Catálogo" onClick={() => navigate("/catalogo")}>←</button>
           </div>
-
-          <div className="form-group">
-            <label>Segundo Apellido (Opcional):</label>
-            <input
-              type="text"
-              name="segundo_apellido"
-              value={segundoApellido}
-              onChange={(e) => setSegundoApellido(e.target.value)}
-              placeholder="Segundo apellido (opcional)"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Email:</label>
-            <input
-              type="email"
-              name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Correo electrónico"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Fecha de Nacimiento:</label>
-            <input
-              type="date"
-              name="fecha_nacimiento"
-              value={fechaNacimiento}
-              onChange={(e) => setFechaNacimiento(e.target.value)}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Talla:</label>
-            <input
-              type="text"
-              name="talla"
-              value={talla}
-              onChange={(e) => setTalla(e.target.value)}
-              placeholder="Talla"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Contraseña nueva:</label>
-            <input
-              type="password"
-              name="contrasena"
-              value={contrasena}
-              onChange={(e) => setContrasena(e.target.value)}
-              placeholder="Deja vacío si no quieres cambiarla"
-              autoComplete="new-password"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Foto de perfil:</label>
-            <input
-              type="file"
-              name="foto"
-              onChange={(e) => setFoto(e.target.files[0])}
-              accept="image/*"
-            />
-          </div>
-
-          <button type="submit" className="boton-guardar">
-            GUARDAR
-          </button>
-
-          <button
-            type="button"
-            className="volver-btn"
-            style={{
-              position: "fixed",
-              bottom: "30px",
-              right: "30px",
-              padding: "6px 10px",
-              background: "#7c5e2c",
-              color: "white",
-              border: "none",
-              borderRadius: "50%",
-              fontSize: "20px",
-              cursor: "pointer",
-              boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
-            }}
-            title="Volver al Catálogo"
-            onClick={() => navigate("/catalogo")}
-          >
-            ←
-          </button>
         </form>
-
         {mensaje && <p className="mensaje">{mensaje}</p>}
       </div>
     </div>

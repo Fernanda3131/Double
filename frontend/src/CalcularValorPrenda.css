@@ -1,0 +1,230 @@
+/* Contenedor principal de la calculadora */
+.calculadora-container {
+  width: 100%;
+  min-height: calc(100vh - 80px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #faf9f7 0%, #f5f2ed 100%);
+  padding: 40px 20px;
+  box-sizing: border-box;
+}
+
+.calculadora-wrapper {
+  max-width: 600px;
+  width: 100%;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  padding: 40px;
+  box-sizing: border-box;
+}
+
+/* Título principal */
+.calculadora-titulo {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 2rem;
+  color: #333;
+  text-align: center;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.calculadora-subtitulo {
+  font-family: 'League Gothic', sans-serif;
+  font-size: 1.1rem;
+  color: #666;
+  text-align: center;
+  margin-bottom: 30px;
+  letter-spacing: 0.5px;
+}
+
+/* Formulario */
+.calculadora-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.calculadora-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.calculadora-label {
+  font-family: 'League Gothic', sans-serif;
+  font-size: 1.2rem;
+  color: #333;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+/* Inputs y selects */
+.calculadora-select,
+.calculadora-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #e0d8cc;
+  border-radius: 10px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  background: #fafafa;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.calculadora-select:focus,
+.calculadora-input:focus {
+  outline: none;
+  border-color: #b8956d;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(184, 149, 109, 0.1);
+}
+
+.calculadora-input::-webkit-inner-spin-button,
+.calculadora-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.calculadora-input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Botón calcular */
+.calculadora-btn {
+  width: 100%;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #c5a882 0%, #b8956d 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: 'League Gothic', sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(184, 149, 109, 0.3);
+  margin-top: 10px;
+}
+
+.calculadora-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(184, 149, 109, 0.4);
+  background: linear-gradient(135deg, #d4b896 0%, #c5a882 100%);
+}
+
+.calculadora-btn:active {
+  transform: translateY(0);
+}
+
+/* Resultado */
+.calculadora-resultado {
+  background: linear-gradient(135deg, #f5f2ed 0%, #ede8df 100%);
+  border: 2px solid #c5a882;
+  border-radius: 15px;
+  padding: 30px;
+  text-align: center;
+  margin-top: 20px;
+  animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.calculadora-resultado-texto {
+  font-family: 'League Gothic', sans-serif;
+  font-size: 1.3rem;
+  color: #666;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+}
+
+.calculadora-resultado-valor {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 2.5rem;
+  color: #b8956d;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Indicadores de opciones */
+.calculadora-select option {
+  padding: 10px;
+}
+
+/* Botón volver */
+.calculadora-volver {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: transparent;
+  color: #b8956d;
+  border: 2px solid #b8956d;
+  border-radius: 10px;
+  font-family: 'League Gothic', sans-serif;
+  font-size: 1.2rem;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.calculadora-volver:hover {
+  background: #b8956d;
+  color: white;
+  transform: translateX(-3px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .calculadora-wrapper {
+    padding: 30px 20px;
+  }
+
+  .calculadora-titulo {
+    font-size: 1.6rem;
+  }
+
+  .calculadora-subtitulo {
+    font-size: 1rem;
+  }
+
+  .calculadora-label {
+    font-size: 1.1rem;
+  }
+
+  .calculadora-resultado-valor {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .calculadora-container {
+    padding: 20px 10px;
+  }
+
+  .calculadora-wrapper {
+    padding: 25px 15px;
+    border-radius: 15px;
+  }
+
+  .calculadora-titulo {
+    font-size: 1.4rem;
+  }
+
+  .calculadora-btn {
+    font-size: 1.2rem;
+    padding: 14px 16px;
+  }
+}

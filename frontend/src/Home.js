@@ -345,20 +345,19 @@ export default function Home() {
       {/* 🔎 Filtros y barra de búsqueda */}
       <div className="filtros-dropdown-wrapper">
         <div className="filtros-top-row" style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          {/* Bloque perfectamente centrado */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '520px', maxWidth: '800px', width: '100%' }}>
+          {/* Bloque absolutamente centrado como conjunto */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'none', justifyContent: 'center', width: '100%', maxWidth: '900px', margin: '0 auto' }}>
             <div
               className="filtros-dropdown-trigger"
               onClick={() => setMostrarFiltros(!mostrarFiltros)}
-              style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', marginRight: '6px' }}
+              style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
             >
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6B5B43" strokeWidth="2">
                 <circle cx="11" cy="11" r="8"></circle>
                 <path d="m21 21-4.35-4.35"></path>
               </svg>
             </div>
-            <span style={{ fontSize: '22px', color: '#6B5B43', margin: '0 8px 0 0' }}>&gt;</span>
-            <div className="busqueda-container" style={{ flex: 1, minWidth: '420px', maxWidth: '700px', borderRadius: '22px', background: '#bfa06a', padding: '0 18px', display: 'flex', alignItems: 'center', height: '40px', marginLeft: '0' }}>
+            <div className="busqueda-container" style={{ flex: 1, minWidth: '600px', maxWidth: '900px', borderRadius: '22px', background: '#bfa06a', padding: '0 18px', display: 'flex', alignItems: 'center', height: '40px', margin: '0 auto' }}>
               <input
                 type="text"
                 className="busqueda-input"

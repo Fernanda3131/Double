@@ -12,9 +12,43 @@ from werkzeug.utils import secure_filename
 mi_perfil_bp = Blueprint('mi_perfil', __name__)
 
 # ------------------------------
-# Carpeta para imágenesexcelente,
+# Carpeta para imágenes
 # ------------------------------
-UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
+UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "uploads")
+
+# Endpoint para actualizar el banner del usuario
+@mi_perfil_bp.route('/api/mi_perfil/actualizar_banner', methods=['POST'])
+def actualizar_banner():
+    id_usuario = request.form.get('id_usuario')
+    print(f"[DEBUG] id_usuario recibido: {id_usuario}")
+    if 'banner_usuario' not in request.files or not id_usuario:
+        print("[DEBUG] Faltan datos en el formulario para actualizar banner")
+        return jsonify({"error": "Faltan datos"}), 400
+
+    banner = request.files['banner_usuario']
+    if banner and banner.filename:
+        filename = secure_filename(banner.filename)
+        timestamp = str(int(time.time()))
+        banner_nombre = f"banner_{id_usuario}_{timestamp}_{filename}"
+        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+        banner_path = os.path.join(UPLOAD_FOLDER, banner_nombre)
+        banner.save(banner_path)
+
+        print(f"[DEBUG] Guardando banner en: {banner_path}")
+        print(f"[DEBUG] Actualizando usuario id={id_usuario} con banner_usuario={banner_nombre}")
+
+        conexion = obtener_conexion()
+        with conexion.cursor() as cursor:
+            cursor.execute(
+                "UPDATE usuario SET banner_usuario = %s WHERE id_usuario = %s",
+                (banner_nombre, id_usuario)
+            )
+            print(f"[DEBUG] SQL ejecutado: UPDATE usuario SET banner_usuario = {banner_nombre} WHERE id_usuario = {id_usuario}")
+            conexion.commit()
+        print(f"[DEBUG] Banner actualizado correctamente para usuario {id_usuario}")
+        return jsonify({"success": True, "banner_usuario": banner_nombre})
+    print("[DEBUG] No se pudo guardar el banner (archivo vacío o sin nombre)")
+    return jsonify({"error": "No se pudo guardar el banner"}), 500
 
 # ------------------------------
 # Función para asignar tipo de transacción aleatorio
@@ -55,6 +89,7 @@ def obtener_perfil(id_usuario):
                     u.fecha_nacimiento AS fecha_nacimiento,
                     u.talla AS talla_usuario,
                     u.foto AS foto_usuario,
+                    u.creado_en AS creado_en,
                     p.id_publicacion,
                     pr.id_prenda,
                     pr.nombre AS nombre_prenda,
@@ -90,6 +125,18 @@ def obtener_perfil(id_usuario):
             elif fecha_nac:
                 fecha_nac = str(fecha_nac)
             
+            # Convertir creado_en a string si es necesario
+            creado_en = perfil[0].get('creado_en', None)
+            print(f"🔍 DEBUG - creado_en raw: {creado_en}, tipo: {type(creado_en)}")
+            
+            if creado_en:
+                if hasattr(creado_en, 'isoformat'):
+                    creado_en = creado_en.isoformat()
+                else:
+                    creado_en = str(creado_en)
+            
+            print(f"🔍 DEBUG - creado_en procesado: {creado_en}")
+            
             usuario = {
                 'id_usuario': perfil[0]['id_usuario'],
                 'PrimerNombre': perfil[0]['PrimerNombre'],
@@ -101,9 +148,12 @@ def obtener_perfil(id_usuario):
                 'fecha_nacimiento': fecha_nac,
                 'talla_usuario': perfil[0]['talla_usuario'],
                 'foto_usuario': perfil[0]['foto_usuario'],
+                'creado_en': creado_en,
                 'promedio_valoracion': perfil[0]['promedio_valoracion'],
                 'prendas': []
             }
+            
+            print(f"🔍 DEBUG - usuario dict creado_en: {usuario.get('creado_en')}")
 
             # Agregar prendas si existen
             for row in perfil:

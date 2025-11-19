@@ -26,9 +26,6 @@ function AppPerfiles() {
     </svg>
   `);
 
-  // 🔹 Imagen por defecto para banner
-  const defaultBannerImage = "https://via.placeholder.com/600x200?text=Banner";
-
   // 🔹 Obtener perfil del backend
   useEffect(() => {
     const endpoint = id_usuario
@@ -106,26 +103,8 @@ function AppPerfiles() {
   return (
     <div className="app">
       <main className="app-main">
-
         {perfil ? (
           <>
-            {/* Banner de perfil */}
-            <div className="banner-perfil" style={{ marginBottom: 20 }}>
-              <img
-                src={
-                  perfil.banner_usuario
-                    ? `${BACKEND_URL}/uploads/${perfil.banner_usuario}`
-                    : defaultBannerImage
-                }
-                alt="Banner del usuario"
-                className="banner-usuario"
-                style={{ width: "100%", maxHeight: 200, objectFit: "cover", borderRadius: 10 }}
-                onError={(e) => {
-                  e.target.src = defaultBannerImage;
-                }}
-              />
-            </div>
-
             {/* Columna izquierda */}
             <div className="perfil">
               <div className="Marco">

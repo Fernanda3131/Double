@@ -1,0 +1,217 @@
+body {
+  background: #fff;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.editar-perfil {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #fff;
+}
+
+.perfil-card {
+  background: #fff;
+  border-radius: 28px;
+  box-shadow: 0 6px 40px 0 rgba(154, 119, 56, 0.13), 0 2px 12px 0 rgba(154, 119, 56, 0.10);
+  width: 750px;
+  max-width: 96vw;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin: 40px auto;
+}
+
+.perfil-card h3 {
+  background: #e6dbb8;
+  color: #9A7738;
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+  padding: 32px 0 18px 0;
+  letter-spacing: 0.5px;
+  text-align: center;
+  border-top-left-radius: 28px;
+  border-top-right-radius: 28px;
+}
+
+.perfil-card form {
+  padding: 36px 36px 24px 36px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px 24px;
+  background: #fff;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 0;
+}
+
+.form-group label {
+  font-size: 15px;
+  color: #7c5e2c;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="date"] {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 7px;
+  border: 1.5px solid #e6dbb8;
+  background: #f9f6ee;
+  color: #3d2b1f;
+  font-size: 1rem;
+  transition: border 0.2s, background 0.2s;
+  outline: none;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="password"]:focus,
+.form-group input[type="date"]:focus {
+  border: 1.5px solid #9A7738;
+  background: #fff;
+}
+
+.form-group input[type="file"] {
+  border: 1px dashed #c7a45a;
+  padding: 8px;
+  background: #f9f6ee;
+  border-radius: 7px;
+  font-size: 0.98rem;
+  color: #7c5e2c;
+  cursor: pointer;
+}
+
+.boton-guardar {
+  grid-column: span 2;
+  background-color: #9A7738;
+  color: white;
+  padding: 13px 0;
+  border: none;
+  border-radius: 24px;
+  font-size: 1.1rem;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica', sans-serif;
+}
+
+.boton-guardar:hover {
+  background-color: #B08A43;
+}
+
+.volver-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  padding: 6px 10px;
+  background: #7c5e2c;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  z-index: 10;
+  transition: background 0.2s;
+}
+.volver-btn:hover {
+  background: #9A7738;
+}
+
+.mensaje {
+  grid-column: span 2;
+  margin-top: 10px;
+  font-weight: bold;
+  color: green;
+  text-align: center;
+  font-size: 1.08rem;
+}
+
+.cargando {
+  text-align: center;
+  padding: 20px;
+  color: #9A7738;
+  font-size: 1.2rem;
+}
+
+/* Previsualización de foto */
+.preview-foto {
+  grid-column: span 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.preview-foto img {
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2.5px solid #c7a45a;
+  margin-bottom: 6px;
+  background: #f5efe3;
+}
+.preview-foto span {
+  color: #7c5e2c;
+  font-size: 14px;
+}
+
+@media (max-width: 1300px) {
+  .perfil-card {
+    width: 99vw;
+    min-width: unset;
+  }
+  .perfil-card form {
+    padding: 28px 4vw 28px 4vw;
+    grid-template-columns: 1fr;
+    gap: 24px 0;
+  }
+}
+
+@media (max-width: 1100px) {
+  .perfil-card {
+    width: 99vw;
+    min-width: unset;
+  }
+  .perfil-card form {
+    padding: 24px 4vw 24px 4vw;
+    grid-template-columns: 1fr;
+    gap: 20px 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .perfil-card {
+    width: 98vw;
+    min-width: unset;
+  }
+  .perfil-card form {
+    padding: 18px 6vw 18px 6vw;
+    grid-template-columns: 1fr;
+    gap: 18px 0;
+  }
+  .boton-guardar {
+    grid-column: 1;
+  }
+  .mensaje {
+    grid-column: 1;
+  }
+  .preview-foto {
+    grid-column: 1;
+  }
+}

@@ -1,0 +1,21 @@
+--- Python Fask
+pip install Flask
+pip install flask-cors
+pip install flask-mysqldb
+pip install Flask-Mail
+pip install pymysql
+pip install bcrypt
+pip install reportlab
+pip install Flask-Dance
+pip install requests
+pip install requests-oauthlib
+pip install oauthlib
+pip install gunicorn
+pip install pymongo 
+pip install flask-socketio
+pip install eventlet
+pip install braintree
+------ en frontend
+npm install 
+npm install react-router-dom
+npm install chart.js react-chartjs-2

@@ -20,6 +20,7 @@ function PagoTarjeta() {
     descripcion: 'Compra de prenda'
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     // Cargar el script de Braintree
     const script = document.createElement('script');

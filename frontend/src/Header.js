@@ -25,6 +25,7 @@ const Header = ({ setIsLoggedIn }) => {
   }, []);
 
   // Detectar página activa y actualizar índice de la barra
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const currentIndex = navItems.findIndex(item => 
       location.pathname === item.path || 

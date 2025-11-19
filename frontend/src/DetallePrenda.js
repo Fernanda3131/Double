@@ -49,7 +49,6 @@ function DetallePrenda() {
     <div className="detalle-prenda-container">
       <div className="detalle-prenda-titulo">DETALLE PRENDA</div>
       <div className="detalle-prenda-info-publicacion">
-        
         {/* IZQUIERDA: Fotos de la prenda */}
         <div className="detalle-prenda-fotos-publicacion">
           <div className="detalle-prenda-fotos-titulo">Fotos</div>
@@ -57,7 +56,13 @@ function DetallePrenda() {
           <div style={{ marginBottom: "18px", textAlign: "center" }}>
             <button
               className="detalle-prenda-ver-perfil-btn"
-              onClick={() => navigate(`/perfil/${prenda.id_usuario}`)}
+              onClick={() => {
+                if (esPropietario) {
+                  navigate("/mi_perfil");
+                } else {
+                  navigate(`/perfil/${prenda.id_usuario}`);
+                }
+              }}
               style={{
                 marginBottom: "8px",
                 background: "#a07e44",
@@ -70,7 +75,9 @@ function DetallePrenda() {
                 cursor: "pointer",
               }}
             >
-              Ver perfil de {prenda.username.charAt(0).toUpperCase() + prenda.username.slice(1).toLowerCase()}
+              {esPropietario
+                ? "Ver mi perfil"
+                : `Ver perfil de ${prenda.username.charAt(0).toUpperCase() + prenda.username.slice(1).toLowerCase()}`}
             </button>
           </div>
 

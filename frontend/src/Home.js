@@ -45,6 +45,7 @@ export default function Home() {
   const idUsuario = localStorage.getItem("id_usuario");
 
   // 🔹 Cargar publicaciones y lista de deseos del usuario actual
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetch("http://localhost:5000/api/publicaciones")
       .then((res) => {
@@ -57,7 +58,7 @@ export default function Home() {
 
         console.debug("/api/publicaciones ->", items);
 
-        // El backend ya filtra por estado (cuando aplica). Aquí usamos los items tal cual
+        // El backend ya filtra por estado (cuando aplica). Aqu usamos los items tal cual
         items.sort((a, b) => {
           if (a.fecha_publicacion && b.fecha_publicacion) {
             return new Date(b.fecha_publicacion) - new Date(a.fecha_publicacion);

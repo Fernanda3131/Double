@@ -61,6 +61,7 @@ function MiPerfil() {
   useEffect(() => {
     console.log("🔍 Iniciando carga del perfil...");
     cargarPerfil();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const cargarPerfil = async () => {
@@ -731,9 +732,22 @@ function MiPerfil() {
                                 {/* Botón principal cambia según si es tu perfil o no */}
                                 <button 
                                   className="prenda-btn primary" 
-                                  onClick={() => handlePrendaClick(prenda)}
+                                  onClick={() => {
+                                    const myId = String(localStorage.getItem('id_usuario'));
+                                    if (isOwnProfile) {
+                                      handlePrendaClick(prenda);
+                                    } else if (String(prenda.id_usuario) === myId) {
+                                      navigate('/mi_perfil');
+                                    } else {
+                                      handlePrendaClick(prenda);
+                                    }
+                                  }}
                                 >
-                                  {isOwnProfile ? '⚙️ Gestionar Prenda' : '👁 Ver Detalles'}
+                                  {isOwnProfile
+                                    ? '⚙️ Gestionar Prenda'
+                                    : String(prenda.id_usuario) === String(localStorage.getItem('id_usuario'))
+                                      ? '👤 Ver mi perfil'
+                                      : '👁 Ver Detalles'}
                                 </button>
                                 
                                 {/* Botón secundario solo si NO es tu perfil */}

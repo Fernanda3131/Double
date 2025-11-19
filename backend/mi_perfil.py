@@ -164,6 +164,7 @@ def obtener_perfil(id_usuario):
                     prenda = {
                         'id_prenda': row['id_prenda'],
                         'id_publicacion': row['id_publicacion'],
+                        'id_usuario': perfil[0]['id_usuario'],
                         'nombre_prenda': row['nombre_prenda'],
                         'foto_prenda': foto_prenda,
                         'promedio_valoracion': row['promedio_valoracion'],

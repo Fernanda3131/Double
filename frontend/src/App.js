@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
-
 import Home from "./Home";
 import Iniciar from "./IniciarSesion";
 import Agregar from "./AgregarPublicacion";
@@ -34,17 +33,18 @@ import HeaderAdmin from "./HeaderAdmin";
 import Footer from "./Footer";
 import PublicHeader from "./PublicHeader";
 
+
 // 🔒 Rutas privadas
 function PrivateRoute({ isLoggedIn, children }) {
   return isLoggedIn ? children : <Navigate to="/iniciar" />;
 }
 
-// Rutas públicas
+// 🌐 Rutas públicas
 function PublicRoute({ isLoggedIn, children, redirectTo = "/" }) {
   return !isLoggedIn ? children : <Navigate to={redirectTo} />;
 }
 
-// Rutas para Admin
+// 👑 Rutas para administrador
 function AdminRoute({ isLoggedIn, children }) {
   const idRol = localStorage.getItem("id_rol");
   return isLoggedIn && (idRol === "1" || idRol === 1)
@@ -52,10 +52,10 @@ function AdminRoute({ isLoggedIn, children }) {
     : <Navigate to="/iniciar" />;
 }
 
-// 🔹 Nueva ruta para usuarios normales (evita que admin acceda a catálogo)
+// 👤 Rutas para usuarios normales
 function UserRoute({ isLoggedIn, children }) {
   const idRol = localStorage.getItem("id_rol");
-  return isLoggedIn && (idRol === "2" || idRol === 2) // asumo que el rol 2 = usuario normal
+  return isLoggedIn && (idRol === "2" || idRol === 2)
     ? children
     : <Navigate to="/" />;
 }
@@ -71,7 +71,7 @@ function Layout({ header, children }) {
   );
 }
 
-// Layout especial para Admin (sin botón de chat)
+// Layout Admin
 function AdminLayout({ header, children }) {
   return (
     <>
@@ -82,29 +82,25 @@ function AdminLayout({ header, children }) {
   );
 }
 
-// � Componente para redirección automática basada en rol
+// 🚦 Redirección basada en rol
 function RootRedirect() {
   const token = localStorage.getItem("token");
   const idRol = localStorage.getItem("id_rol");
-  
+
   if (!token) {
-    // No está logueado, mostrar Home público
     return (
       <Layout header={<PublicHeader />}>
         <Home />
       </Layout>
     );
   }
-  
-  // Está logueado, redirigir según rol
-  if (idRol === "1" || idRol === 1) {
-    return <Navigate to="/AdminDashboard" replace />;
-  } else {
-    return <Navigate to="/catalogo" replace />;
-  }
+
+  if (idRol === "1" || idRol === 1) return <Navigate to="/AdminDashboard" replace />;
+  return <Navigate to="/catalogo" replace />;
 }
 
-// 🚀 App principal
+
+// 🚀 APP PRINCIPAL
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [openChatModal, setOpenChatModal] = useState(false);
@@ -114,313 +110,324 @@ function App() {
     setIsLoggedIn(!!token);
   }, []);
 
-  // Listener global para abrir el chat desde cualquier parte
+  // Escuchar evento global para abrir chat
   useEffect(() => {
-    const handleOpenChat = () => {
-      setOpenChatModal(true);
-    };
-    // Compatibilidad: escuchar ambos eventos
-    window.addEventListener('openChatModal', handleOpenChat);
-    window.addEventListener('abrir-chat-flotante', handleOpenChat);
+    const handleOpenChat = () => setOpenChatModal(true);
+
+    window.addEventListener("openChatModal", handleOpenChat);
+    window.addEventListener("abrir-chat-flotante", handleOpenChat);
+
     return () => {
-      window.removeEventListener('openChatModal', handleOpenChat);
-      window.removeEventListener('abrir-chat-flotante', handleOpenChat);
+      window.removeEventListener("openChatModal", handleOpenChat);
+      window.removeEventListener("abrir-chat-flotante", handleOpenChat);
     };
   }, []);
+
 
   return (
     <div className="App">
       <main>
         <Routes>
 
-            {/* 🏠 Página principal */}
-            <Route
-              path="/"
-              element={<RootRedirect />}
-            />
+          {/* 🏠 Home */}
+          <Route path="/" element={<RootRedirect />} />
 
-            {/* 🛍️ Catálogo → solo usuarios normales */}
-            <Route
-              path="/catalogo"
-              element={
-                <UserRoute isLoggedIn={isLoggedIn}>
-                  <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
-                    <Home />
-                  </Layout>
-                </UserRoute>
-              }
-            />
-
-            {/* 📝 Registro */}
-            <Route
-              path="/register"
-              element={
-                <PublicRoute isLoggedIn={isLoggedIn}>
-                  <Register setIsLoggedIn={setIsLoggedIn} />
-                </PublicRoute>
-              }
-            />
-             {/* Verificar */}
-<Route
-  path="/verificar"
-  element={
-    <PublicRoute isLoggedIn={isLoggedIn}>
-      <Verificar />
-    </PublicRoute>
-  }
-/>
-
-            {/* 🔐 Iniciar sesión */}
-            <Route
-              path="/iniciar"
-              element={
-                <PublicRoute isLoggedIn={isLoggedIn}>
-                  <Iniciar setIsLoggedIn={setIsLoggedIn} />
-                </PublicRoute>
-              }
-            />
-
-            {/* 👤 Mi perfil */}
-            <Route
-              path="/MiPerfil"
-              element={
-                <PrivateRoute isLoggedIn={isLoggedIn}>
-                  <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
-                    <MiPerfil />
-                  </Layout>
-                </PrivateRoute>
-              }
-            />
-
-            {/* ➕ Agregar publicación */}
-            <Route
-              path="/agregar"
-              element={
-                <PrivateRoute isLoggedIn={isLoggedIn}>
-                  <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
-                    <Agregar />
-                  </Layout>
-                </PrivateRoute>
-              }
-            />
-
-            {/* ✏️ Editar perfil */}
-            <Route
-              path="/editar"
-              element={
-                <PrivateRoute isLoggedIn={isLoggedIn}>
-                  <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
-                    <Editar />
-                  </Layout>
-                </PrivateRoute>
-              }
-            />
-
-            {/* 👗 Detalle prenda */}
-            <Route
-              path="/detalle_prenda/:id"
-              element={
-                <PrivateRoute isLoggedIn={isLoggedIn}>
-                  <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
-                    <DetallePrenda />
-                  </Layout>
-                </PrivateRoute>
-              }
-            />
-
-            {/* 💖 Lista de deseos */}
-            <Route
-              path="/lista_deseos"
-              element={
-                <PrivateRoute isLoggedIn={isLoggedIn}>
-                  <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
-                    <ListaDeDeseos />
-                  </Layout>
-                </PrivateRoute>
-              }
-            />
-
-
-            {/* ⚙️ Configuración */}
-            <Route
-              path="/configuracion"
-              element={
-                <PrivateRoute isLoggedIn={isLoggedIn}>
-                  <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
-                    <Configuracion />
-                  </Layout>
-                </PrivateRoute>
-              }
-            />
-
-            {/* Políticas de seguridad */}
-            <Route
-              path="/politicas-seguridad"
-              element={
-                <PrivateRoute isLoggedIn={isLoggedIn}>
-                  <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
-                    <PoliticasSeguridad />
-                  </Layout>
-                </PrivateRoute>
-              }
-            />
-
-            {/* Preguntas frecuentes */}
-            <Route
-              path="/preguntas-frecuentes"
-              element={
-                <PrivateRoute isLoggedIn={isLoggedIn}>
-                  <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
-                    <PreguntasFrecuentes />
-                  </Layout>
-                </PrivateRoute>
-              }
-            />
-
-            {/* Contáctanos */}
-            <Route
-              path="/contactanos"
-              element={
-                <PrivateRoute isLoggedIn={isLoggedIn}>
-                  <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
-                    <Contactanos />
-                  </Layout>
-                </PrivateRoute>
-              }
-            />
-
-            {/* � Chat */}
-            <Route
-              path="/chat"
-              element={
-                <PrivateRoute isLoggedIn={isLoggedIn}>
-                  <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
-                    <ChatList />
-                  </Layout>
-                </PrivateRoute>
-              }
-            />
-
-            {/* �👥 Ver perfil de otro usuario */}
-            <Route
-              path="/perfil/:id_usuario"
-              element={
-                <PrivateRoute isLoggedIn={isLoggedIn}>
-                  <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
-                    <AppPerfiles />
-                  </Layout>
-                </PrivateRoute>
-              }
-            />
-
-
-            {/* 🧑‍💼 Panel de administrador */}
-            <Route
-              path="/AdminDashboard"
-              element={
-                <AdminRoute isLoggedIn={isLoggedIn}>
-                  <AdminLayout header={<HeaderAdmin setIsLoggedIn={setIsLoggedIn} />}>
-                    <AdminDashboard />
-                  </AdminLayout>
-                </AdminRoute>
-              }
-            />
-
-            {/* ✉️ Enviar mensaje (Admin) */}
-            <Route
-              path="/AdminDashboard/mensaje"
-              element={
-                <AdminRoute isLoggedIn={isLoggedIn}>
-                  <AdminLayout header={<HeaderAdmin setIsLoggedIn={setIsLoggedIn} />}>
-                    <MensajeAdmin />
-                  </AdminLayout>
-                </AdminRoute>
-              }
-            />
-
-            {/* Gestión de prendas (Admin) */}
-            <Route
-              path="/AdminDashboard/gestion-prendas"
-              element={
-                <AdminRoute isLoggedIn={isLoggedIn}>
-                  <AdminLayout header={<HeaderAdmin setIsLoggedIn={setIsLoggedIn} />}>
-                    <GestionPrendasAdmin />
-                  </AdminLayout>
-                </AdminRoute>
-              }
-            />
-
-            {/* Gestión de usuarios (Admin) */}
-            <Route
-              path="/AdminDashboard/usuarios"
-              element={
-                <AdminRoute isLoggedIn={isLoggedIn}>
-                  <AdminLayout header={<HeaderAdmin setIsLoggedIn={setIsLoggedIn} />}>
-                    <GestionUsuarios />
-                  </AdminLayout>
-                </AdminRoute>
-              }
-            />
-
-            <Route
-              path="/pago-tarjeta" 
-              element={
-                <PrivateRoute isLoggedIn={isLoggedIn}>
-                  <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
-                    <PagoTarjeta />
-                  </Layout>
-                </PrivateRoute>
-              }
-            />
-
-            {/* Gestión de pagos (Admin) */}
-            <Route
-              path="/AdminDashboard/pagos"
-              element={
-                <AdminRoute isLoggedIn={isLoggedIn}>
-                  <AdminLayout header={<HeaderAdmin setIsLoggedIn={setIsLoggedIn} />}>
-                    <GestionPagos />
-                  </AdminLayout>
-                </AdminRoute>
-              }
-            />
-
-            {/* Editar publicación desde Admin */}
-            <Route
-              path="/AdminDashboard/editar_publicacion/:id"
-              element={
-                <AdminRoute isLoggedIn={isLoggedIn}>
-                  <AdminLayout header={<HeaderAdmin setIsLoggedIn={setIsLoggedIn} />}>
-                    <GestionarPublicacionesAdmin />
-                  </AdminLayout>
-                </AdminRoute>
-              }
-            />
-
-            <Route
-              path="/gestion_prendas/:id"
-              element={
-                <PrivateRoute isLoggedIn={isLoggedIn}>
-                  <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
-                    <GestionarPrenda />
-                  </Layout>
-                </PrivateRoute>
-              }
-            />
-
-            {/* 🔁 Redirección por defecto */}
-            <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
-        </main>
-
-        {/* Chat Modal Global - disponible desde cualquier página */}
-        {isLoggedIn && openChatModal && (
-          <ChatModal
-            open={openChatModal}
-            onClose={() => setOpenChatModal(false)}
+          {/* 🛍 Catálogo */}
+          <Route
+            path="/catalogo"
+            element={
+              <UserRoute isLoggedIn={isLoggedIn}>
+                <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
+                  <Home />
+                </Layout>
+              </UserRoute>
+            }
           />
-        )}
-      </div>
+
+          {/* 📝 Registro */}
+          <Route
+            path="/register"
+            element={
+              <PublicRoute isLoggedIn={isLoggedIn}>
+                <Register setIsLoggedIn={setIsLoggedIn} />
+              </PublicRoute>
+            }
+          />
+
+          {/* Verificar */}
+          <Route
+            path="/verificar"
+            element={
+              <PublicRoute isLoggedIn={isLoggedIn}>
+                <Verificar />
+              </PublicRoute>
+            }
+          />
+
+          {/* 🔐 Iniciar sesión */}
+          <Route
+            path="/iniciar"
+            element={
+              <PublicRoute isLoggedIn={isLoggedIn}>
+                <Iniciar setIsLoggedIn={setIsLoggedIn} />
+              </PublicRoute>
+            }
+          />
+
+          {/* 👤 Perfil (nombre original) */}
+          <Route
+            path="/MiPerfil"
+            element={
+              <PrivateRoute isLoggedIn={isLoggedIn}>
+                <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
+                  <MiPerfil />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+
+          {/* 👤 Perfil (en minúsculas como pediste) */}
+          <Route
+            path="/mi_perfil"
+            element={
+              <PrivateRoute isLoggedIn={isLoggedIn}>
+                <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
+                  <MiPerfil />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+
+          {/* ➕ Agregar publicación */}
+          <Route
+            path="/agregar"
+            element={
+              <PrivateRoute isLoggedIn={isLoggedIn}>
+                <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
+                  <Agregar />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+
+          {/* ✏ Editar perfil */}
+          <Route
+            path="/editar"
+            element={
+              <PrivateRoute isLoggedIn={isLoggedIn}>
+                <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
+                  <Editar />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+
+          {/* 👗 Detalle prenda */}
+          <Route
+            path="/detalle_prenda/:id"
+            element={
+              <PrivateRoute isLoggedIn={isLoggedIn}>
+                <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
+                  <DetallePrenda />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+
+          {/* 💖 Lista de deseos */}
+          <Route
+            path="/lista_deseos"
+            element={
+              <PrivateRoute isLoggedIn={isLoggedIn}>
+                <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
+                  <ListaDeDeseos />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+
+          {/* ⚙ Configuración */}
+          <Route
+            path="/configuracion"
+            element={
+              <PrivateRoute isLoggedIn={isLoggedIn}>
+                <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
+                  <Configuracion />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+
+          {/* Políticas */}
+          <Route
+            path="/politicas-seguridad"
+            element={
+              <PrivateRoute isLoggedIn={isLoggedIn}>
+                <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
+                  <PoliticasSeguridad />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+
+          {/* Preguntas frecuentes */}
+          <Route
+            path="/preguntas-frecuentes"
+            element={
+              <PrivateRoute isLoggedIn={isLoggedIn}>
+                <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
+                  <PreguntasFrecuentes />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+
+          {/* Contáctanos */}
+          <Route
+            path="/contactanos"
+            element={
+              <PrivateRoute isLoggedIn={isLoggedIn}>
+                <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
+                  <Contactanos />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+
+          {/* Chat */}
+          <Route
+            path="/chat"
+            element={
+              <PrivateRoute isLoggedIn={isLoggedIn}>
+                <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
+                  <ChatList />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+
+          {/* Perfil público */}
+          <Route
+            path="/perfil/:id_usuario"
+            element={
+              <PrivateRoute isLoggedIn={isLoggedIn}>
+                <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
+                  <AppPerfiles />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+
+          {/* Admin Dashboard */}
+          <Route
+            path="/AdminDashboard"
+            element={
+              <AdminRoute isLoggedIn={isLoggedIn}>
+                <AdminLayout header={<HeaderAdmin setIsLoggedIn={setIsLoggedIn} />}>
+                  <AdminDashboard />
+                </AdminLayout>
+              </AdminRoute>
+            }
+          />
+
+          {/* Mensaje admin */}
+          <Route
+            path="/AdminDashboard/mensaje"
+            element={
+              <AdminRoute isLoggedIn={isLoggedIn}>
+                <AdminLayout header={<HeaderAdmin setIsLoggedIn={setIsLoggedIn} />}>
+                  <MensajeAdmin />
+                </AdminLayout>
+              </AdminRoute>
+            }
+          />
+
+          {/* Gestión prendas */}
+          <Route
+            path="/AdminDashboard/gestion-prendas"
+            element={
+              <AdminRoute isLoggedIn={isLoggedIn}>
+                <AdminLayout header={<HeaderAdmin setIsLoggedIn={setIsLoggedIn} />}>
+                  <GestionPrendasAdmin />
+                </AdminLayout>
+              </AdminRoute>
+            }
+          />
+
+          {/* Gestión usuarios */}
+          <Route
+            path="/AdminDashboard/usuarios"
+            element={
+              <AdminRoute isLoggedIn={isLoggedIn}>
+                <AdminLayout header={<HeaderAdmin setIsLoggedIn={setIsLoggedIn} />}>
+                  <GestionUsuarios />
+                </AdminLayout>
+              </AdminRoute>
+            }
+          />
+
+          {/* Pago tarjeta */}
+          <Route
+            path="/pago-tarjeta"
+            element={
+              <PrivateRoute isLoggedIn={isLoggedIn}>
+                <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
+                  <PagoTarjeta />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+
+          {/* Gestión pagos */}
+          <Route
+            path="/AdminDashboard/pagos"
+            element={
+              <AdminRoute isLoggedIn={isLoggedIn}>
+                <AdminLayout header={<HeaderAdmin setIsLoggedIn={setIsLoggedIn} />}>
+                  <GestionPagos />
+                </AdminLayout>
+              </AdminRoute>
+            }
+          />
+
+          {/* Editar publicación admin */}
+          <Route
+            path="/AdminDashboard/editar_publicacion/:id"
+            element={
+              <AdminRoute isLoggedIn={isLoggedIn}>
+                <AdminLayout header={<HeaderAdmin setIsLoggedIn={setIsLoggedIn} />}>
+                  <GestionarPublicacionesAdmin />
+                </AdminLayout>
+              </AdminRoute>
+            }
+          />
+
+          {/* Editar publicación usuario */}
+          <Route
+            path="/gestion_prendas/:id"
+            element={
+              <PrivateRoute isLoggedIn={isLoggedIn}>
+                <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
+                  <GestionarPrenda />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+
+          {/* 🧭 Ruta por defecto */}
+          <Route path="*" element={<Navigate to="/" />} />
+
+        </Routes>
+      </main>
+
+      {/* Chat Modal */}
+      {isLoggedIn && openChatModal && (
+        <ChatModal
+          open={openChatModal}
+          onClose={() => setOpenChatModal(false)}
+        />
+      )}
+    </div>
   );
 }
 

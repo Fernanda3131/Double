@@ -28,6 +28,7 @@ function ChatList({ onClose }) {
   };
 
   // Cargar conversaciones existentes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (id_usuario) {
       cargarConversaciones();

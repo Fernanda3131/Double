@@ -55,15 +55,40 @@ function DetallePrenda() {
         <div className="detalle-prenda-foto-col">
           {hasMultipleFotos ? (
             <div className="detalle-prenda-carrusel">
-              <img
-                src={`http://localhost:5000/uploads/${fotos[current]}`}
-                alt={`Foto ${current + 1}`}
-                className="detalle-prenda-foto-grande"
-                style={{ cursor: 'pointer' }}
-                onClick={goToNext}
-              />
+              <div style={{ position: 'relative', display: 'inline-block' }}>
+                <button
+                  className="detalle-carrusel-flechita izq"
+                  onClick={() => setCurrent((prev) => (prev === 0 ? fotos.length - 1 : prev - 1))}
+                  aria-label="Anterior"
+                  type="button"
+                >
+                  <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14 5L8 11L14 17" stroke="#a07e44" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+                <img
+                  src={`http://localhost:5000/uploads/${fotos[current]}`}
+                  alt={`Foto ${current + 1}`}
+                  className="detalle-prenda-foto-grande"
+                />
+                <button
+                  className="detalle-carrusel-flechita der"
+                  onClick={goToNext}
+                  aria-label="Siguiente"
+                  type="button"
+                >
+                  <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 5L14 11L8 17" stroke="#a07e44" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+              </div>
               <div className="detalle-prenda-carrusel-indicador">
-                {`${current + 1} / ${fotos.length}`}
+                {fotos.map((_, idx) => (
+                  <span
+                    key={idx}
+                    className={"detalle-carrusel-dot" + (idx === current ? " active" : "")}
+                  />
+                ))}
               </div>
             </div>
           ) : (

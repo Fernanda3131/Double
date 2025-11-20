@@ -65,7 +65,6 @@ export default function ListaDeDeseos() {
             Tus prendas favoritas guardadas para después
           </p>
           <div className="lista-deseos-stats">
-            <span className="stats-icon">💕</span>
             <span className="stats-text">
               {deseos.length} {deseos.length === 1 ? 'prenda favorita' : 'prendas favoritas'}
             </span>
@@ -74,7 +73,6 @@ export default function ListaDeDeseos() {
 
         {deseos.length === 0 ? (
           <div className="lista-deseos-vacia">
-            <div className="empty-icon">💔</div>
             <h3 className="empty-title">Tu lista está vacía</h3>
             <p className="empty-subtitle">
               Explora nuestro catálogo y guarda tus prendas favoritas

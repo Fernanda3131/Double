@@ -952,31 +952,31 @@ function MiPerfil() {
               <div className="tips-content">
                 <h3 className="tips-title">💡 P-Tips</h3>
                 <div className="tip-item">
-                  <span className="tip-icon">🌱</span>
+                  <span className="tip-icon"></span>
                   <p>Intercambia prendas para un closet más sostenible</p>
                 </div>
                 <div className="tip-item">
-                  <span className="tip-icon">📸</span>
+                  <span className="tip-icon"></span>
                   <p>Sube fotos de alta calidad para mejores intercambios</p>
                 </div>
                 <div className="tip-item">
-                  <span className="tip-icon">💬</span>
+                  <span className="tip-icon"></span>
                   <p>Mantén conversaciones amigables y respetuosas</p>
                 </div>
                 <div className="tip-item">
-                  <span className="tip-icon">⭐</span>
+                  <span className="tip-icon"></span>
                   <p>Valora a otros usuarios después de cada intercambio</p>
                 </div>
                 <div className="tip-item">
-                  <span className="tip-icon">🔄</span>
+                  <span className="tip-icon"></span>
                   <p>Explora nuevas marcas y estilos</p>
                 </div>
                 <div className="tip-item">
-                  <span className="tip-icon">🧼</span>
+                  <span className="tip-icon"></span>
                   <p>Lava y cuida tus prendas antes de intercambiarlas</p>
                 </div>
                 <div className="tip-item">
-                  <span className="tip-icon">📦</span>
+                  <span className="tip-icon"></span>
                   <p>Empaca tus prendas de forma segura</p>
                 </div>
               </div>
@@ -992,12 +992,12 @@ function MiPerfil() {
                 <div className="talla-guide" style={{background: '#fffbe9', borderRadius: 10, padding: 18, border: '1px solid #e6d7b6'}}>
                   <p style={{fontWeight: 600, color: '#a07e44', marginBottom: 10}}>Antes de intercambiar o comprar, ten en cuenta:</p>
                   <ul style={{paddingLeft: 22, margin: 0, color: '#5a4a2a', fontSize: '0.98rem', lineHeight: 1.7}}>
-                    <li>📏 <b>Mide tu cuerpo</b> (busto, cintura y cadera) con una cinta métrica.</li>
-                    <li>📊 <b>Compara tus medidas</b> con la guía de tallas que usa la prenda.</li>
-                    <li>🧵 <b>Revisa el tipo de tela</b>: las rígidas tallan justo; las elásticas dan más margen.</li>
-                    <li>🏷️ <b>Ten en cuenta la marca</b>: algunas suelen ser más pequeñas o más grandes.</li>
-                    <li>👚 <b>Observa el fit</b>: si la prenda es “oversize”, “slim” o “regular”, puede cambiar la sensación de talla.</li>
-                    <li>❓ <b>Pregunta al dueño original</b> si la talla le queda como dice la etiqueta.</li>
+                    <li><b>Mide tu cuerpo</b> (busto, cintura y cadera) con una cinta métrica.</li>
+                    <li><b>Compara tus medidas</b> con la guía de tallas que usa la prenda.</li>
+                    <li><b>Revisa el tipo de tela</b>: las rígidas tallan justo; las elásticas dan más margen.</li>
+                    <li><b>Ten en cuenta la marca</b>: algunas suelen ser más pequeñas o más grandes.</li>
+                    <li><b>Observa el fit</b>: si la prenda es “oversize”, “slim” o “regular”, puede cambiar la sensación de talla.</li>
+                    <li><b>Pregunta al dueño original</b> si la talla le queda como dice la etiqueta.</li>
                   </ul>
                   <div style={{marginTop: 16, color: '#6b4f1d', fontWeight: 500, fontSize: '1rem', textAlign: 'center'}}>
                     Así podrás elegir prendas que te queden mejor y disfrutar más el intercambio.

@@ -5,7 +5,7 @@ import "./Configuracion.css";
 export default function Configuracion() {
   const navigate = useNavigate();
 
-  const irAEditar = () => navigate("/editar");
+  const irAMiPerfil = () => navigate("/mi_perfil");
   const irAListaDeseos = () => navigate("/lista_deseos");
   const irAPoliticasSeguridad = () => navigate("/politicas-seguridad");
   const irAContactanos = () => navigate("/contactanos");
@@ -28,13 +28,11 @@ export default function Configuracion() {
                 <h2 className="section-title">Mi Cuenta</h2>
               </div>
               <div className="button-group">
-                <button className="config-btn" onClick={irAEditar}>
-                  <span className="btn-icon">✏️</span>
+                <button className="config-btn" onClick={irAMiPerfil}>
                   <span className="btn-text">Mi Perfil</span>
                   <span className="btn-arrow">→</span>
                 </button>
                 <button className="config-btn" onClick={irAListaDeseos}>
-                  <span className="btn-icon">❤️</span>
                   <span className="btn-text">Lista de Deseos</span>
                   <span className="btn-arrow">→</span>
                 </button>
@@ -49,17 +47,14 @@ export default function Configuracion() {
               </div>
               <div className="button-group">
                 <button className="config-btn" onClick={irAPoliticasSeguridad}>
-                  <span className="btn-icon">🔒</span>
                   <span className="btn-text">Políticas de Seguridad</span>
                   <span className="btn-arrow">→</span>
                 </button>
                 <button className="config-btn" onClick={irAPreguntasFrecuentes}>
-                  <span className="btn-icon">❓</span>
                   <span className="btn-text">Preguntas Frecuentes</span>
                   <span className="btn-arrow">→</span>
                 </button>
                 <button className="config-btn" onClick={irAContactanos}>
-                  <span className="btn-icon">📧</span>
                   <span className="btn-text">Contáctanos</span>
                   <span className="btn-arrow">→</span>
                 </button>

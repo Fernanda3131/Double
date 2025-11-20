@@ -105,6 +105,8 @@ export default function Home() {
             estado: "Disponible",
             foto_url: "https://via.placeholder.com/300x400/D4AF37/ffffff?text=Blusa"
           }
+          ,
+  
         ];
         
         setProductos(productosMock);
@@ -445,7 +447,15 @@ export default function Home() {
                         : "Agregar a lista de deseos"
                     }
                   >
-                    {estaEnDeseos(prod.id_publicacion) ? "\u2665" : "\u2661"}
+                    {estaEnDeseos(prod.id_publicacion) ? (
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="#a07e44" stroke="#a07e44" strokeWidth="2" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                      </svg>
+                    ) : (
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a07e44" strokeWidth="2" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                      </svg>
+                    )}
                   </button>
                 )}
               </div>

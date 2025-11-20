@@ -416,11 +416,6 @@ export default function Home() {
         <div className="catalogo-grid">
           {filtrarProductos().map((prod) => (
             <div key={prod.id_publicacion} className="producto-card">
-              {/* Badge/Etiqueta si es intercambio */}
-              {prod.tipo_publicacion?.toLowerCase() === 'intercambio' && (
-                <div className="producto-badge">INTERCAMBIO</div>
-              )}
-              
               <img
                 src={prod.foto_url || `http://localhost:5000/uploads/${prod.foto}`}
                 alt={prod.nombre_prenda}
@@ -429,7 +424,11 @@ export default function Home() {
                 }}
               />
               <h4>{prod.nombre_prenda}</h4>
-              <p>${prod.valor ? prod.valor : "0"}</p>
+              {prod.tipo_publicacion?.toLowerCase() === 'intercambio' ? (
+                <p style={{color: '#a07e44', fontWeight: 600, fontSize: '12px', letterSpacing: '1px'}}>INTERCAMBIO</p>
+              ) : (
+                <p>${prod.valor ? prod.valor : "0"}</p>
+              )}
               <div className="botones-flex">
                 <button
                   className="lista-deseos-vermas"

@@ -1,32 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import "./Header.css";
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "./GlobalEffects.css";
+import { useUser } from "./UserContext";
 
 const Header = ({ setIsLoggedIn }) => {
   const navigate = useNavigate();
-  const [userProfile, setUserProfile] = useState(null);
-
-  useEffect(() => {
-    // Obtener datos del usuario desde el backend
-    const fetchUserProfile = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/api/mi_perfil", {
-          credentials: "include"
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          if (data.perfil) {
-            setUserProfile(data.perfil);
-          }
-        }
-      } catch (error) {
-        console.error("Error al obtener perfil del usuario:", error);
-      }
-    };
-
-    fetchUserProfile();
-  }, []);
+  const { userProfile } = useUser();
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -38,13 +17,10 @@ const Header = ({ setIsLoggedIn }) => {
     navigate("/");
   };
 
-  // Construir nombre completo para mostrar
   const getDisplayName = () => {
     if (!userProfile) return "Usuario";
-    
     const firstName = userProfile.PrimerNombre || "";
     const lastName = userProfile.PrimerApellido || "";
-    
     return `${firstName} ${lastName}`.trim() || userProfile.username_usuario || "Usuario";
   };
 
@@ -57,10 +33,10 @@ const Header = ({ setIsLoggedIn }) => {
               src={`http://localhost:5000/uploads/${userProfile.foto_usuario.startsWith("/") ? userProfile.foto_usuario.slice(1) : userProfile.foto_usuario}`}
               alt="Perfil"
               className="profile-avatar"
-              style={{backgroundImage: 'none'}}
+              style={{ backgroundImage: 'none' }}
               onError={(e) => {
                 console.error("Error cargando foto de perfil:", e.target.src);
-                e.target.onerror = null; // Prevenir bucle infinito
+                e.target.onerror = null;
                 e.target.src = "http://localhost:5000/uploads/default.jpg";
               }}
             />
@@ -75,23 +51,14 @@ const Header = ({ setIsLoggedIn }) => {
 
       <div className="header-actions">
         <Link to="/agregar">
-          <button className="header-btn" title="Agregar prenda">
-            ➕
-          </button>
+          <button className="header-btn" title="Agregar prenda">➕</button>
         </Link>
-
         <Link to="/lista_deseos">
-          <button className="header-btn" title="Lista de Deseos">
-            ♡
-          </button>
+          <button className="header-btn" title="Lista de Deseos">♡</button>
         </Link>
-
         <Link to="/configuracion">
-          <button className="header-btn" title="Configuración">
-            ⚙️
-          </button>
+          <button className="header-btn" title="Configuración">⚙️</button>
         </Link>
-
         <button 
           className="header-btn primary" 
           title="Cerrar Sesión" 

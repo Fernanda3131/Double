@@ -420,14 +420,14 @@ function App() {
         </Routes>
       </main>
 
-      {/* Chat Modal */}
-      {isLoggedIn && openChatModal && (
-        <ChatModal
-          open={openChatModal}
-          onClose={() => setOpenChatModal(false)}
-        />
-      )}
-    </div>
+        {/* Chat Modal */}
+        {isLoggedIn && openChatModal && (
+          <ChatModal
+            open={openChatModal}
+            onClose={() => setOpenChatModal(false)}
+          />
+        )}
+      </div>
   );
 }
 

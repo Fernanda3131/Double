@@ -90,6 +90,10 @@ function EditarPerfil() {
       if (res.ok) {
         setMensaje("✅ Perfil actualizado correctamente");
         setContrasena("");
+        // Recarga automática para actualizar la foto de perfil en el header
+        setTimeout(() => {
+          window.location.reload();
+        }, 800); // Da tiempo a mostrar el mensaje
       } else {
         setMensaje("❌ Error al actualizar: " + (data.error || "Intenta de nuevo"));
       }

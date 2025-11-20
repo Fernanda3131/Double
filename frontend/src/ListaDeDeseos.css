@@ -210,7 +210,6 @@
 }
 
 .lista-deseos-corazon::before {
-  content: '💔';
   position: absolute;
   opacity: 0;
   transform: scale(0);

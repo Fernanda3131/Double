@@ -1,9 +1,45 @@
+/* Estilos para el botón de cambiar foto en la previsualización */
+.preview-img-wrapper {
+  position: relative;
+  display: inline-block;
+}
+.cambiar-foto-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255,255,255,0.85);
+  color: #222;
+  font-size: 17px;
+  font-family: 'Libre Baskerville', serif;
+  font-weight: 400;
+  text-align: center;
+  padding: 10px 22px;
+  border-radius: 14px;
+  box-shadow: 0 4px 24px 0 rgba(60,60,60,0.18), 0 1.5px 6px 0 rgba(60,60,60,0.10);
+  opacity: 0;
+  z-index: 4;
+  cursor: pointer;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  border: none;
+}
+.icono-camara {
+  margin-right: 8px;
+  font-size: 18px;
+  vertical-align: middle;
+}
 /* 🎨 Contenedor general - Diseño minimalista */
 .container {
   min-height: 100vh;
   background: linear-gradient(135deg, #faf9f7 0%, #f5f2ed 100%);
   padding: 60px 20px;
   font-family: 'Libre Baskerville', serif;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* 🏷️ Título principal */
@@ -13,6 +49,7 @@
   font-weight: 300;
   letter-spacing: 3px;
   color: #7c5e2c;
+  margin-top: 50px;
   margin-bottom: 50px;
   font-family: "League Gothic", sans-serif;
   text-transform: uppercase;
@@ -347,4 +384,9 @@ textarea {
     bottom: 30px;
     right: 30px;
   }
+}
+
+.foto-cuadro:hover .cambiar-foto-label {
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }

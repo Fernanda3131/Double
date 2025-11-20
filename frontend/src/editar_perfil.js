@@ -4,6 +4,7 @@ import "./EditarPerfil.css";
 
 function EditarPerfil() {
   const navigate = useNavigate();
+
   const [primerNombre, setPrimerNombre] = useState("");
   const [segundoNombre, setSegundoNombre] = useState("");
   const [primerApellido, setPrimerApellido] = useState("");
@@ -14,8 +15,8 @@ function EditarPerfil() {
   const [contrasena, setContrasena] = useState("");
   const [foto, setFoto] = useState(null);
   const [previewFoto, setPreviewFoto] = useState(null);
-  const [mensaje, setMensaje] = useState("");
   const [cargando, setCargando] = useState(true);
+  const [mensaje, setMensaje] = useState(""); // ✅ Agregado para evitar error
 
   const BACKEND_URL = "http://localhost:5000";
 
@@ -40,12 +41,12 @@ function EditarPerfil() {
             perfil.fecha_nacimiento ? perfil.fecha_nacimiento.split("T")[0] : ""
           );
           setTalla(perfil.talla_usuario || "");
-          // Si tienes la URL de la foto actual, ponla aquí:
           if (perfil.foto_usuario) setPreviewFoto(perfil.foto_usuario);
         }
         setCargando(false);
       })
       .catch((err) => {
+        console.error(err);
         setCargando(false);
       });
   }, []);
@@ -68,12 +69,17 @@ function EditarPerfil() {
 
     const formData = new FormData();
 
-    if (primerNombre.trim() !== "") formData.append("primer_nombre", primerNombre.trim());
-    if (segundoNombre.trim() !== "") formData.append("segundo_nombre", segundoNombre.trim());
-    if (primerApellido.trim() !== "") formData.append("primer_apellido", primerApellido.trim());
-    if (segundoApellido.trim() !== "") formData.append("segundo_apellido", segundoApellido.trim());
+    if (primerNombre.trim() !== "")
+      formData.append("primer_nombre", primerNombre.trim());
+    if (segundoNombre.trim() !== "")
+      formData.append("segundo_nombre", segundoNombre.trim());
+    if (primerApellido.trim() !== "")
+      formData.append("primer_apellido", primerApellido.trim());
+    if (segundoApellido.trim() !== "")
+      formData.append("segundo_apellido", segundoApellido.trim());
     if (email.trim() !== "") formData.append("email", email.trim());
-    if (fechaNacimiento.trim() !== "") formData.append("fecha_nacimiento", fechaNacimiento.trim());
+    if (fechaNacimiento.trim() !== "")
+      formData.append("fecha_nacimiento", fechaNacimiento.trim());
     if (talla.trim() !== "") formData.append("talla", talla.trim());
     if (contrasena.trim() !== "") formData.append("contrasena", contrasena.trim());
     if (foto) formData.append("foto", foto);
@@ -90,10 +96,12 @@ function EditarPerfil() {
       if (res.ok) {
         setMensaje("✅ Perfil actualizado correctamente");
         setContrasena("");
-        // Recarga automática para actualizar la foto de perfil en el header
+        if (data && data.perfil && data.perfil.foto_usuario) {
+          localStorage.setItem("foto_usuario", data.perfil.foto_usuario);
+        }
         setTimeout(() => {
           window.location.reload();
-        }, 800); // Da tiempo a mostrar el mensaje
+        }, 800);
       } else {
         setMensaje("❌ Error al actualizar: " + (data.error || "Intenta de nuevo"));
       }
@@ -101,7 +109,6 @@ function EditarPerfil() {
       setMensaje("❌ No se pudo conectar con el servidor");
     }
   };
-
 
   if (cargando) return null;
 
@@ -111,14 +118,25 @@ function EditarPerfil() {
         <h3>Editar Perfil</h3>
         <form onSubmit={handleSubmit} encType="multipart/form-data" autoComplete="off">
           {/* Inputs ocultos para evitar autocompletado */}
-          <input type="text" name="fakeuser" style={{ display: "none" }} autoComplete="username" />
-          <input type="password" name="fakepass" style={{ display: "none" }} autoComplete="new-password" />
+          <input
+            type="text"
+            name="fakeuser"
+            style={{ display: "none" }}
+            autoComplete="username"
+          />
+          <input
+            type="password"
+            name="fakepass"
+            style={{ display: "none" }}
+            autoComplete="new-password"
+          />
+
+          {/* Mensaje de estado */}
+          {mensaje && <p className="mensaje">{mensaje}</p>}
 
           {/* Previsualización de foto */}
           <div className="preview-foto">
-            {previewFoto ? (
-              <img src={previewFoto} alt="Vista previa" />
-            ) : null}
+            {previewFoto ? <img src={previewFoto} alt="Vista previa" /> : null}
           </div>
 
           <div className="form-group">
@@ -251,3 +269,4 @@ function EditarPerfil() {
 }
 
 export default EditarPerfil;
+

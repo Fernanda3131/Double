@@ -113,8 +113,12 @@ function DetallePrenda() {
           <div className="detalle-prenda-label-publicacion">Tipo:</div>
           <div className="detalle-prenda-campo-publicacion">{prenda.tipo_publicacion}</div>
 
-          <div className="detalle-prenda-label-publicacion">Valor →</div>
-          <div className="detalle-prenda-campo-publicacion">${prenda.valor}</div>
+          {prenda.tipo_publicacion?.toLowerCase() !== 'intercambio' && (
+            <>
+              <div className="detalle-prenda-label-publicacion">Valor →</div>
+              <div className="detalle-prenda-campo-publicacion">${prenda.valor}</div>
+            </>
+          )}
 
           <div className="detalle-prenda-label-publicacion" style={{ marginTop: "18px" }}>
             Califica la calidad de la prenda:

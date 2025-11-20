@@ -61,9 +61,26 @@ def perfil():
               email, fecha_nacimiento, talla, ruta_foto_db, contrasena_hashed, id_usuario))
 
         conexion.commit()
+        # Obtener el perfil actualizado
+        cursor.execute("""
+            SELECT primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, email, fecha_nacimiento, talla, foto
+            FROM usuario WHERE id_usuario = %s
+        """, (id_usuario,))
+        perfil_actualizado = cursor.fetchone()
         cursor.close()
         conexion.close()
-        return jsonify({"mensaje": "Perfil actualizado con éxito"}), 200
+        return jsonify({
+            "perfil": {
+                "primer_nombre": perfil_actualizado["primer_nombre"],
+                "segundo_nombre": perfil_actualizado["segundo_nombre"],
+                "primer_apellido": perfil_actualizado["primer_apellido"],
+                "segundo_apellido": perfil_actualizado["segundo_apellido"],
+                "email": perfil_actualizado["email"],
+                "fecha_nacimiento": perfil_actualizado["fecha_nacimiento"],
+                "talla": perfil_actualizado["talla"],
+                "foto_usuario": perfil_actualizado["foto"]
+            }
+        }), 200
 
     # GET - Vista perfil
     cursor.execute("""

@@ -4,6 +4,8 @@ import "./AgregarPublicacion.css";
 
 const AgregarPublicacion = () => {
   const navigate = useNavigate();
+
+  // 🔹 Estados del formulario
   const [tipo, setTipo] = useState("");
   const [valoracion, setValoracion] = useState(0);
   const [nombre, setNombre] = useState("");
@@ -14,9 +16,8 @@ const AgregarPublicacion = () => {
   const [mensaje, setMensaje] = useState("");
   const [fotos, setFotos] = useState([null, null, null, null]);
 
-  const handleStarClick = (num) => {
-    setValoracion(num);
-  };
+  // 🔹 Funciones de interacción
+  const handleStarClick = (num) => setValoracion(num);
 
   const handleFotoChange = (index, file) => {
     const nuevasFotos = [...fotos];
@@ -24,8 +25,24 @@ const AgregarPublicacion = () => {
     setFotos(nuevasFotos);
   };
 
+
+  const renderPreview = (file, index) => {
+    if (!file) return <span className="upload-label"></span>;
+    return (
+      <>
+        <img src={URL.createObjectURL(file)} alt="preview" className="preview-img" />
+        <label htmlFor={`file${index}`} className="cambiar-foto-label">
+          <span className="icono-camara" role="img" aria-label="cámara">📷</span>
+          Cambiar imagen de prenda
+        </label>
+      </>
+    );
+  };
+
+  // 🔹 Enviar formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMensaje("");
 
     const formData = new FormData();
     formData.append("descripcion", descripcion);
@@ -40,8 +57,7 @@ const AgregarPublicacion = () => {
 
     fotos.forEach((foto, i) => {
       if (foto) {
-        if (i === 0) formData.append("foto", foto);
-        else formData.append(`foto${i + 1}`, foto);
+        formData.append(i === 0 ? "foto" : `foto${i + 1}`, foto);
       }
     });
 
@@ -51,24 +67,18 @@ const AgregarPublicacion = () => {
         credentials: "include",
         body: formData,
       });
-
       const data = await response.json();
       setMensaje(data.message || "Publicado correctamente ✅");
 
-      // 🔹 Redirigir al catálogo después de 1 segundo y recargar
+      // 🔹 Redirigir y recargar
       setTimeout(() => {
         navigate("/catalogo");
-        window.location.reload(); // Forzar recarga para actualizar publicaciones
+        window.location.reload();
       }, 1000);
     } catch (error) {
-      setMensaje("❌ Error al publicar");
       console.error(error);
+      setMensaje("❌ Error al publicar");
     }
-  };
-
-  const renderPreview = (file) => {
-    if (!file) return <span className="upload-label"></span>;
-    return <img src={URL.createObjectURL(file)} alt="preview" className="preview-img" />;
   };
 
   return (
@@ -89,11 +99,16 @@ const AgregarPublicacion = () => {
                       style={{ display: "none" }}
                       accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, image/bmp"
                       onChange={(e) => handleFotoChange(index, e.target.files[0] || null)}
-                      disabled={!!foto}
                     />
                     <label htmlFor={`file${index}`} className="upload-label">
-                      {renderPreview(foto)}
+                      {foto ? <img src={URL.createObjectURL(foto)} alt="preview" className="preview-img" /> : <span className="upload-label"></span>}
                     </label>
+                    {foto && (
+                      <label htmlFor={`file${index}`} className="cambiar-foto-label">
+                        <span className="icono-camara" role="img" aria-label="cámara">📷</span>
+                        Cambiar imagen
+                      </label>
+                    )}
                   </div>
                 );
               }
@@ -197,15 +212,17 @@ const AgregarPublicacion = () => {
           </form>
 
           {mensaje && (
-            <p style={{ 
-              marginTop: "20px", 
-              padding: "15px", 
-              background: mensaje.includes("❌") ? "#ffe5e5" : "#e8f5e9",
-              color: mensaje.includes("❌") ? "#c62828" : "#2e7d32",
-              borderRadius: "10px",
-              textAlign: "center",
-              fontWeight: "600"
-            }}>
+            <p
+              style={{
+                marginTop: "20px",
+                padding: "15px",
+                background: mensaje.includes("❌") ? "#ffe5e5" : "#e8f5e9",
+                color: mensaje.includes("❌") ? "#c62828" : "#2e7d32",
+                borderRadius: "10px",
+                textAlign: "center",
+                fontWeight: "600"
+              }}
+            >
               {mensaje}
             </p>
           )}

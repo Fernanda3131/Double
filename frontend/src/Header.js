@@ -173,7 +173,7 @@ const Header = ({ setIsLoggedIn }) => {
         >
           {foto ? (
             <img
-              src={`http://localhost:5000/uploads/${foto}`}
+              src={`http://localhost:5000/uploads/${foto}?t=${Date.now()}`}
               alt="Perfil"
               className="profile-pic"
               style={{

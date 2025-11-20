@@ -168,6 +168,7 @@ def obtener_datos_perfil(id_usuario):
                     username AS username_usuario,
                     email AS email_usuario,
                     foto AS foto_usuario,
+                    banner_usuario,
                     talla,
                     fecha_nacimiento,
                     creado_en
@@ -200,6 +201,7 @@ def obtener_datos_perfil(id_usuario):
         "username_usuario": datos_usuario["username_usuario"] or "",
         "email_usuario": datos_usuario["email_usuario"] or "",
         "foto_usuario": datos_usuario["foto_usuario"] or "default.jpg",
+        "banner_usuario": datos_usuario["banner_usuario"] or None,
         "talla_usuario": datos_usuario["talla"] or "",
         "fecha_nacimiento": str(datos_usuario["fecha_nacimiento"]) if datos_usuario.get("fecha_nacimiento") else "",
         "creado_en": str(datos_usuario["creado_en"]) if datos_usuario.get("creado_en") else "",

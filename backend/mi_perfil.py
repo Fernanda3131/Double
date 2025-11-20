@@ -16,6 +16,32 @@ mi_perfil_bp = Blueprint('mi_perfil', __name__)
 # ------------------------------
 UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
 
+# Endpoint para actualizar el banner del usuario
+@mi_perfil_bp.route('/api/mi_perfil/actualizar_banner', methods=['POST'])
+def actualizar_banner():
+    id_usuario = request.form.get('id_usuario')
+    if 'banner_usuario' not in request.files or not id_usuario:
+        return jsonify({"error": "Faltan datos"}), 400
+
+    banner = request.files['banner_usuario']
+    if banner and banner.filename:
+        filename = secure_filename(banner.filename)
+        timestamp = str(int(time.time()))
+        banner_nombre = f"banner_{id_usuario}_{timestamp}_{filename}"
+        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+        banner_path = os.path.join(UPLOAD_FOLDER, banner_nombre)
+        banner.save(banner_path)
+
+        conexion = obtener_conexion()
+        with conexion.cursor() as cursor:
+            cursor.execute(
+                "UPDATE usuario SET banner_usuario = %s WHERE id_usuario = %s",
+                (banner_nombre, id_usuario)
+            )
+            conexion.commit()
+        return jsonify({"success": True, "banner_usuario": banner_nombre})
+    return jsonify({"error": "No se pudo guardar el banner"}), 500
+
 # ------------------------------
 # Función para asignar tipo de transacción aleatorio
 # ------------------------------

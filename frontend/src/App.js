@@ -5,7 +5,6 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./Home";
 import Iniciar from "./IniciarSesion";
 import Agregar from "./AgregarPublicacion";
-import Editar from "./editar_perfil";
 import Register from "./register";
 import MiPerfil from "./MiPerfil";
 import DetallePrenda from "./DetallePrenda";
@@ -107,14 +106,29 @@ function RootRedirect() {
 // �🚀 App principal
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showChatModal, setShowChatModal] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
   }, []);
 
+  // Listener global para abrir el chat flotante
+  useEffect(() => {
+    const handler = () => setShowChatModal(true);
+    window.addEventListener('abrir-chat-flotante', handler);
+    return () => window.removeEventListener('abrir-chat-flotante', handler);
+  }, []);
+
   return (
     <div className="App">
+      {showChatModal && (
+        <div className="chat-modal-overlay" onClick={() => setShowChatModal(false)}>
+          <div className="chat-modal-container" onClick={e => e.stopPropagation()}>
+            <ChatList onClose={() => setShowChatModal(false)} />
+          </div>
+        </div>
+      )}
       <main>
         <Routes>
 
@@ -189,17 +203,7 @@ function App() {
               }
             />
 
-            {/* ✏️ Editar perfil */}
-            <Route
-              path="/editar"
-              element={
-                <PrivateRoute isLoggedIn={isLoggedIn}>
-                  <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
-                    <Editar />
-                  </Layout>
-                </PrivateRoute>
-              }
-            />
+
 
             {/* 👗 Detalle prenda */}
             <Route

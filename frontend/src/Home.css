@@ -1154,25 +1154,25 @@
 
 /* Botón de lista de deseos (corazón) - Compacto */
 .lista-deseos-corazon {
-  background: none;
-  border: none;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  color: #a07e44;
   font-size: 16px;
-  color: #c5a882;
   cursor: pointer;
-  transition: all 0.3s ease;
-  padding: 3px;
-  border-radius: 2px; /* Bordes más rectos */
-  width: 24px;
-  height: 24px;
+  padding: 0;
+  width: auto;
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .lista-deseos-corazon:hover {
-  color: #b8956d;
-  background-color: rgba(197, 168, 130, 0.15);
-  transform: scale(1.05); /* Efecto más sutil */
+  color: #7c5e2c;
+  background: transparent !important;
+  transform: scale(1.08);
 }
 
 /* Media query para tablets grandes */

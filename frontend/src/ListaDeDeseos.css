@@ -209,27 +209,6 @@
   box-shadow: 0 4px 15px rgba(26, 26, 26, 0.3);
 }
 
-.lista-deseos-corazon::before {
-  content: '💔';
-  position: absolute;
-  opacity: 0;
-  transform: scale(0);
-  transition: all 0.3s ease;
-}
-
-.lista-deseos-corazon:hover::before {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.lista-deseos-corazon:hover .heart-icon {
-  opacity: 0;
-  transform: scale(0);
-}
-
-.heart-icon {
-  transition: all 0.3s ease;
-}
 
 /* ==========================================
    ESTADO VACÍO

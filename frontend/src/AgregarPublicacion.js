@@ -86,7 +86,7 @@ const AgregarPublicacion = () => {
                       type="file"
                       id={`file${index}`}
                       style={{ display: "none" }}
-                      accept="image/*"
+                      accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, image/bmp"
                       onChange={(e) => handleFotoChange(index, e.target.files[0] || null)}
                       disabled={!!foto}
                     />

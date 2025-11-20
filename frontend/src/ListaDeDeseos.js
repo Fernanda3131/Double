@@ -65,7 +65,6 @@ export default function ListaDeDeseos() {
             Tus prendas favoritas guardadas para después
           </p>
           <div className="lista-deseos-stats">
-            <span className="stats-icon">💕</span>
             <span className="stats-text">
               {deseos.length} {deseos.length === 1 ? 'prenda favorita' : 'prendas favoritas'}
             </span>
@@ -74,7 +73,6 @@ export default function ListaDeDeseos() {
 
         {deseos.length === 0 ? (
           <div className="lista-deseos-vacia">
-            <div className="empty-icon">💔</div>
             <h3 className="empty-title">Tu lista está vacía</h3>
             <p className="empty-subtitle">
               Explora nuestro catálogo y guarda tus prendas favoritas
@@ -117,7 +115,18 @@ export default function ListaDeDeseos() {
                         onClick={() => handleQuitarDeseo(prod.id_publicacion)}
                         title="Quitar de favoritos"
                       >
-                        <span className="heart-icon">❤️</span>
+                        <svg
+                          width="22"
+                          height="22"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="#a07e44"
+                          strokeWidth="2.2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M12 21C12 21 4 13.36 4 8.5C4 5.42 6.42 3 9.5 3C11.24 3 12.91 3.81 14 5.08C15.09 3.81 16.76 3 18.5 3C21.58 3 24 5.42 24 8.5C24 13.36 16 21 16 21H12Z" />
+                        </svg>
                       </button>
                     </div>
                   </div>

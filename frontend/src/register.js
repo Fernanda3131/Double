@@ -253,7 +253,7 @@ function Register() {
                 type="file"
                 id="foto"
                 name="foto"
-                accept="image/*"
+                accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, image/bmp"
                 onChange={handleChange}
                 required
               />

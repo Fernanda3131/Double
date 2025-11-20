@@ -1,4 +1,6 @@
+import EditarPerfilPanel from "./EditarPerfilPanel";
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "./perfiles.css";
 
@@ -13,9 +15,39 @@ function MiPerfil() {
   const [hoveredStar, setHoveredStar] = useState(0); // Para hover effect
   const [isOwnProfile, setIsOwnProfile] = useState(true); // Para determinar si es el perfil propio
   const [activeTab, setActiveTab] = useState("prendas");
-  const [isEditMode, setIsEditMode] = useState(false); // Modo de edición
-  const [editForm, setEditForm] = useState({}); // Formulario de edición
-  const [editPhoto, setEditPhoto] = useState(null); // Nueva foto
+  const [isEditPanelOpen, setIsEditPanelOpen] = useState(false); // Panel flotante
+
+  // Banner
+  const [bannerHover, setBannerHover] = useState(false);
+  const [bannerImage, setBannerImage] = useState(null); // Para previsualización
+
+  const handleBannerImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setBannerImage(URL.createObjectURL(file));
+      // Subir al backend
+      const formData = new FormData();
+      formData.append('banner_usuario', file);
+      // Puedes obtener el id_usuario de localStorage o del perfil
+      const id_usuario = localStorage.getItem('id_usuario') || (perfil && perfil.id_usuario);
+      formData.append('id_usuario', id_usuario);
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/mi_perfil/actualizar_banner`, {
+          method: 'POST',
+          body: formData,
+        });
+        const data = await response.json();
+        if (data.success) {
+          // Si quieres actualizar el perfil con el nuevo banner, hazlo aquí
+          // setPerfil(prev => ({ ...prev, banner_usuario: data.banner_usuario }));
+        } else {
+          alert('Error al subir el banner: ' + (data.error || '')); 
+        }
+      } catch (err) {
+        alert('Error de red al subir el banner');
+      }
+    }
+  };
   
   // Estados para la calculadora
   const [marca, setMarca] = useState(3);
@@ -27,16 +59,19 @@ function MiPerfil() {
   
   const navigate = useNavigate();
 
+  const location = useLocation();
   useEffect(() => {
     console.log("🔍 Iniciando carga del perfil...");
     cargarPerfil();
-  }, []);
+  }, [location.search]);
 
   const cargarPerfil = async () => {
     try {
       setLoading(true);
       setError(null);
       await cargarPerfilPorSesion();
+      // Lanzar evento personalizado para refrescar el header tras cualquier actualización de perfil
+      window.dispatchEvent(new Event("foto_usuario_actualizada"));
     } catch (error) {
       console.error("❌ Error general al cargar perfil:", error);
       setError("Error al cargar el perfil");
@@ -134,7 +169,7 @@ function MiPerfil() {
     console.log("📅 Campo creado_en recibido:", data.perfil?.creado_en);
     if (data.perfil) {
       setPerfil(data.perfil);
-      setRating(Number(data.perfil.promedio_valoracion) || 0);
+      setRating(Math.round(Number(data.perfil.promedio_valoracion)) || 0);
       setIsOwnProfile(true); // Siempre es el perfil propio en MiPerfil
       setLoading(false);
     } else {
@@ -154,11 +189,8 @@ function MiPerfil() {
     localStorage.setItem(userProfileKey, starValue.toString());
     
     // Actualizar la valoración localmente
-    setUserRating(starValue);
-    
-    // Calcular nuevo promedio aproximado (simulado)
-    const newRating = Math.min(5, Math.max(1, (rating * 0.7 + starValue * 0.3))); // Mezcla ponderada
-    setRating(newRating);
+    setUserRating(Math.round(starValue));
+    setRating(Math.round(starValue));
     
     alert(`Has valorado a este usuario con ${starValue} estrellas`);
   };
@@ -202,70 +234,26 @@ function MiPerfil() {
   };
 
   // --- Funciones de edición ---
-  const handleEditClick = () => {
-    setEditForm({
-      PrimerNombre: perfil.PrimerNombre || '',
-      PrimerApellido: perfil.PrimerApellido || '',
-      email_usuario: perfil.email_usuario || '',
-      talla_usuario: perfil.talla_usuario || '',
-      fecha_nacimiento: perfil.fecha_nacimiento || ''
-    });
-    setIsEditMode(true);
+  // Abrir panel flotante de edición
+  const handleEditPanelOpen = () => {
+    setIsEditPanelOpen(true);
   };
 
-  const handleCancelEdit = () => {
-    setIsEditMode(false);
-    setEditForm({});
-    setEditPhoto(null);
-  };
 
-  const handleInputChange = (field, value) => {
-    setEditForm(prev => ({
+  // Guardar cambios del panel flotante
+  const handleEditPanelSave = ({ nombre, bio, foto }) => {
+    setPerfil(prev => ({
       ...prev,
-      [field]: value
+      PrimerNombre: nombre,
+      bio,
+      // Si hay nueva foto, solo preview local
+      ...(foto ? { foto_usuario_preview: URL.createObjectURL(foto) } : {})
     }));
+    setIsEditPanelOpen(false);
   };
 
-  const handlePhotoChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setEditPhoto(file);
-    }
-  };
 
-  const handleSaveChanges = async () => {
-    try {
-      // Guardar cambios localmente sin tocar la BD
-      const updatedPerfil = {
-        ...perfil,
-        PrimerNombre: editForm.PrimerNombre || perfil.PrimerNombre,
-        PrimerApellido: editForm.PrimerApellido || perfil.PrimerApellido,
-        email_usuario: editForm.email_usuario || perfil.email_usuario,
-        talla_usuario: editForm.talla_usuario || perfil.talla_usuario,
-        fecha_nacimiento: editForm.fecha_nacimiento || perfil.fecha_nacimiento
-      };
 
-      // Si hay nueva foto, crear URL local para mostrarla
-      if (editPhoto) {
-        updatedPerfil.foto_usuario_preview = URL.createObjectURL(editPhoto);
-      }
-
-      // Actualizar el estado local
-      setPerfil(updatedPerfil);
-      
-      // Salir del modo edición
-      setIsEditMode(false);
-      setEditForm({});
-      setEditPhoto(null);
-      
-      console.log('✅ Cambios guardados localmente:', updatedPerfil);
-      alert('✅ Cambios guardados localmente');
-      
-    } catch (error) {
-      console.error('❌ Error al guardar cambios:', error);
-      alert('❌ Error al guardar los cambios');
-    }
-  };
 
   // Función para calcular precio con la nueva fórmula mejorada
   const calcularPrecio = () => {
@@ -353,9 +341,74 @@ function MiPerfil() {
     <div className="profile-container">
       {perfil ? (
         <>
-          {/* Solo el Hero Banner - sin cuadro superpuesto */}
-          <div className="hero-banner-only">
+
+          {/* Hero Banner editable con hover */}
+          <div 
+            className="hero-banner-only"
+            onMouseEnter={() => setBannerHover(true)}
+            onMouseLeave={() => setBannerHover(false)}
+            style={{ position: 'relative' }}
+          >
             <div className="banner-overlay"></div>
+            {/* Imagen de banner: previsualización local o desde backend */}
+            {bannerImage ? (
+              <img 
+                src={bannerImage} 
+                alt="Banner preview" 
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  zIndex: 1
+                }}
+              />
+            ) : perfil.banner_usuario ? (
+              <img
+                src={`${BACKEND_URL}/uploads/${perfil.banner_usuario}`}
+                alt="Banner usuario"
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  zIndex: 1
+                }}
+                onError={e => { e.target.onerror = null; e.target.style.display = 'none'; }}
+              />
+            ) : null}
+            {/* Botón para cargar imagen al hacer hover */}
+            {bannerHover && (
+              <div style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                zIndex: 2,
+                background: 'rgba(255,255,255,0.85)',
+                padding: 16,
+                borderRadius: 12,
+                boxShadow: '0 2px 8px #0002',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center'
+              }}>
+                <label htmlFor="banner-upload" style={{ cursor: 'pointer', fontWeight: 600 }}>
+                  📷 Cambiar imagen de banner
+                </label>
+                <input
+                  id="banner-upload"
+                  type="file"
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  onChange={handleBannerImageChange}
+                />
+              </div>
+            )}
           </div>
 
           {/* Three Column Layout */}
@@ -363,85 +416,30 @@ function MiPerfil() {
             {/* Left Sidebar with Avatar */}
             <div className="profile-left-sidebar">
               <div className="sidebar-avatar">
-                {isEditMode ? (
-                  <div className="avatar-edit-container">
-                    <img 
-                      src={
-                        editPhoto 
-                          ? URL.createObjectURL(editPhoto)
-                          : perfil.foto_usuario_preview
-                            ? perfil.foto_usuario_preview
-                            : perfil.foto_usuario
-                              ? `${BACKEND_URL}/uploads/${perfil.foto_usuario.replace(/^\/+/, '')}`
-                              : `${BACKEND_URL}/uploads/default.jpg`
-                      }
-                      alt="Foto del usuario"
-                      onError={(e) => {
-                        e.target.onerror = null; // Prevenir bucle infinito
-                        e.target.src = `${BACKEND_URL}/uploads/default.jpg`;
-                      }}
-                    />
-                    <div className="avatar-edit-overlay">
-                      <input
-                        type="file"
-                        id="photo-input"
-                        accept="image/*"
-                        onChange={handlePhotoChange}
-                        style={{ display: 'none' }}
-                      />
-                      <button 
-                        className="avatar-edit-btn"
-                        onClick={() => document.getElementById('photo-input').click()}
-                      >
-                        📷 Cambiar Foto
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <img 
-                    src={
-                      perfil.foto_usuario_preview
-                        ? perfil.foto_usuario_preview
-                        : perfil.foto_usuario
-                          ? `${BACKEND_URL}/uploads/${perfil.foto_usuario.replace(/^\/+/, '')}`
-                          : `${BACKEND_URL}/uploads/default.jpg`
-                    }
-                    alt="Foto del usuario"
-                    onError={(e) => {
-                      console.log("❌ Error cargando foto del usuario:", e.target.src);
-                      console.log("📝 Datos del perfil foto_usuario:", perfil.foto_usuario);
-                      e.target.onerror = null; // Prevenir bucle infinito
-                      e.target.src = `${BACKEND_URL}/uploads/default.jpg`;
-                    }}
-                    onLoad={(e) => {
-                      console.log("✅ Foto del usuario cargada correctamente:", e.target.src);
-                    }}
-                  />
-                )}
+                <img 
+                  src={
+                    perfil.foto_usuario_preview
+                      ? perfil.foto_usuario_preview
+                      : perfil.foto_usuario
+                        ? `${BACKEND_URL}/uploads/${perfil.foto_usuario.replace(/^\/+/, '')}`
+                        : `${BACKEND_URL}/uploads/default.jpg`
+                  }
+                  alt="Foto del usuario"
+                  onError={(e) => {
+                    console.log("❌ Error cargando foto del usuario:", e.target.src);
+                    console.log("📝 Datos del perfil foto_usuario:", perfil.foto_usuario);
+                    e.target.onerror = null; // Prevenir bucle infinito
+                    e.target.src = `${BACKEND_URL}/uploads/default.jpg`;
+                  }}
+                  onLoad={(e) => {
+                    console.log("✅ Foto del usuario cargada correctamente:", e.target.src);
+                  }}
+                />
               </div>
               
               <div className="sidebar-info">
                 {/* Nombre editable */}
-                {isEditMode ? (
-                  <div className="edit-name-container">
-                    <input
-                      type="text"
-                      className="edit-input name-input"
-                      placeholder="Primer Nombre"
-                      value={editForm.PrimerNombre || ''}
-                      onChange={(e) => handleInputChange('PrimerNombre', e.target.value)}
-                    />
-                    <input
-                      type="text"
-                      className="edit-input name-input"
-                      placeholder="Primer Apellido"
-                      value={editForm.PrimerApellido || ''}
-                      onChange={(e) => handleInputChange('PrimerApellido', e.target.value)}
-                    />
-                  </div>
-                ) : (
-                  <h2 className="sidebar-name">{perfil.PrimerNombre || 'Usuario'} {perfil.PrimerApellido || ''}</h2>
-                )}
+                <h2 className="sidebar-name">{perfil.PrimerNombre || 'Usuario'} {perfil.PrimerApellido || ''}</h2>
                 
                 <p className="sidebar-username">@{perfil.username_usuario || 'username'}</p>
                 
@@ -460,115 +458,69 @@ function MiPerfil() {
                 <div className="sidebar-contact-info">
                   <div className="contact-item">
                     <div className="contact-icon">📧</div>
-                    {isEditMode ? (
-                      <input
-                        type="email"
-                        className="edit-input contact-input"
-                        placeholder="Correo electrónico"
-                        value={editForm.email_usuario || ''}
-                        onChange={(e) => handleInputChange('email_usuario', e.target.value)}
-                      />
-                    ) : (
-                      <span className="contact-text">{perfil.email_usuario || "correo@ejemplo.com"}</span>
-                    )}
+                    <span className="contact-text">{perfil.email_usuario || "correo@ejemplo.com"}</span>
                   </div>
                   <div className="contact-item">
                     <div className="contact-icon">👕</div>
-                    {isEditMode ? (
-                      <select
-                        className="edit-input contact-input"
-                        value={editForm.talla_usuario || ''}
-                        onChange={(e) => handleInputChange('talla_usuario', e.target.value)}
-                      >
-                        <option value="">Seleccionar talla</option>
-                        <option value="XS">XS</option>
-                        <option value="S">S</option>
-                        <option value="M">M</option>
-                        <option value="L">L</option>
-                        <option value="XL">XL</option>
-                        <option value="XXL">XXL</option>
-                      </select>
-                    ) : (
-                      <span className="contact-text">Talla: {perfil.talla_usuario || "No especificada"}</span>
-                    )}
+                    <span className="contact-text">Talla: {perfil.talla_usuario || "No especificada"}</span>
                   </div>
                   <div className="contact-item">
                     <div className="contact-icon">📅</div>
-                    {isEditMode ? (
-                      <input
-                        type="date"
-                        className="edit-input contact-input"
-                        value={editForm.fecha_nacimiento ? editForm.fecha_nacimiento.split('T')[0] : ''}
-                        onChange={(e) => handleInputChange('fecha_nacimiento', e.target.value)}
-                      />
-                    ) : (
-                      <span className="contact-text">
-                        Miembro desde {(() => {
-                          console.log('📅 creado_en completo:', perfil.creado_en);
-                          
-                          if (!perfil.creado_en) {
-                            return "2024";
+                    <span className="contact-text">
+                      Miembro desde {(() => {
+                        if (!perfil.creado_en) {
+                          return "2024";
+                        }
+                        try {
+                          let fechaStr = perfil.creado_en;
+                          if (fechaStr.includes(' ')) {
+                            fechaStr = fechaStr.split(' ')[0];
                           }
-                          
-                          try {
-                            // Manejar formato MySQL: "2025-11-13 07:07:46"
-                            let fechaStr = perfil.creado_en;
-                            
-                            // Si tiene espacio, tomar solo la fecha
-                            if (fechaStr.includes(' ')) {
-                              fechaStr = fechaStr.split(' ')[0];
-                            }
-                            
-                            const fecha = new Date(fechaStr);
-                            console.log('📅 fecha parseada:', fecha);
-                            
-                            const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 
-                                          'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-                            
-                            const resultado = `${meses[fecha.getMonth()]} ${fecha.getFullYear()}`;
-                            console.log('📅 resultado final:', resultado);
-                            
-                            return resultado;
-                          } catch (error) {
-                            console.error('❌ Error parseando fecha:', error);
-                            return "2024";
-                          }
-                        })()}
-                      </span>
-                    )}
+                          const fecha = new Date(fechaStr);
+                          const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 
+                                        'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+                          const resultado = `${meses[fecha.getMonth()]} ${fecha.getFullYear()}`;
+                          return resultado;
+                        } catch (error) {
+                          return "2024";
+                        }
+                      })()}
+                    </span>
                   </div>
                 </div>
 
                 {/* Botones de acción */}
                 <div className="sidebar-actions">
-                  {isOwnProfile && isEditMode ? (
+                  {isOwnProfile ? (
                     <>
-                      <button className="sidebar-btn success" onClick={handleSaveChanges}>
-                        <span>💾 Guardar Cambios</span>
-                      </button>
-                      <button className="sidebar-btn secondary" onClick={handleCancelEdit}>
-                        <span>❌ Cancelar</span>
-                      </button>
-                    </>
-                  ) : isOwnProfile ? (
-                    <>
-                      <button className="sidebar-btn primary" onClick={() => navigate("/chat")}>
+                      <button className="sidebar-btn primary" onClick={() => window.dispatchEvent(new CustomEvent('abrir-chat-flotante'))}>
                         <span>💬 Mis Mensajes</span>
                       </button>
-                      <button className="sidebar-btn secondary" onClick={handleEditClick}>
+                      <button className="sidebar-btn secondary" onClick={handleEditPanelOpen}>
                         <span>✏ Editar Perfil</span>
                       </button>
                     </>
                   ) : (
                     <>
-                      <button className="sidebar-btn primary" onClick={() => navigate("/chat")}>
+                      <button className="sidebar-btn primary" onClick={() => navigate("/chat")}>\
                         <span>💬 Enviar Mensaje</span>
                       </button>
-                      <button className="sidebar-btn secondary" onClick={() => navigate("/editar")}>
+                      <button className="sidebar-btn secondary" onClick={() => navigate("/editar")}>\
                         <span>✏ Ver Perfil</span>
                       </button>
                     </>
                   )}
+                      {/* Panel flotante de edición de perfil */}
+                      <EditarPerfilPanel
+                        open={isEditPanelOpen}
+                        onClose={() => setIsEditPanelOpen(false)}
+                        perfil={{
+                          nombre: perfil?.PrimerNombre || "",
+                          bio: perfil?.bio || "",
+                          foto_usuario: perfil?.foto_usuario_preview || (perfil?.foto_usuario ? `${BACKEND_URL}/uploads/${perfil.foto_usuario.replace(/^\/+/,'')}` : "")
+                        }}
+                        onSave={handleEditPanelSave}
+                      />
                 </div>
               </div>
             </div>
@@ -581,13 +533,7 @@ function MiPerfil() {
                   className={`nav-tab ${activeTab === "prendas" ? "active" : ""}`}
                   onClick={() => setActiveTab("prendas")}
                 >
-                  Prendas {isEditMode && isOwnProfile && '✏'}
-                </button>
-                <button 
-                  className={`nav-tab ${activeTab === "intercambios" ? "active" : ""}`}
-                  onClick={() => setActiveTab("intercambios")}
-                >
-                  Intercambios
+                  Prendas
                 </button>
                 <button 
                   className={`nav-tab ${activeTab === "media" ? "active" : ""}`}
@@ -597,13 +543,7 @@ function MiPerfil() {
                 </button>
               </div>
 
-              {/* Indicador de modo edición */}
-              {isEditMode && isOwnProfile && (
-                <div className="edit-mode-indicator">
-                  <span className="edit-mode-text">✏ Modo Edición Activo</span>
-                  <span className="edit-mode-subtitle">Los cambios se guardan localmente</span>
-                </div>
-              )}
+                  Prendas
 
               {/* Content Area */}
               <div className="timeline-content">
@@ -633,29 +573,7 @@ function MiPerfil() {
                             </div>
                             <div className="prenda-info">
                               <h4 className="prenda-name">{prenda.nombre_prenda}</h4>
-                              <div className="prenda-meta">
-                                <span className="prenda-category">Double P Marketplace</span>
-                                <span className={`prenda-condition ${prenda.tipo_transaccion === 'venta' ? 'prenda-venta' : ''}`}>
-                                  {prenda.tipo_transaccion === 'venta' 
-                                    ? `💰 En Venta - $${prenda.precio?.toLocaleString('es-CO')}` 
-                                    : '🔄 Disponible para intercambio'
-                                  }
-                                </span>
-                              </div>
-                              
-                              {/* Mostrar etiquetas si existen */}
-                              {prenda.etiquetas && prenda.etiquetas.length > 0 ? (
-                                <div className="prenda-tags">
-                                  {prenda.etiquetas.map((etiqueta, index) => (
-                                    <span key={index} className="prenda-tag">#{etiqueta}</span>
-                                  ))}
-                                </div>
-                              ) : (
-                                <div className="prenda-stats">
-                                  <span className="prenda-stat">👕 Moda Sostenible</span>
-                                  <span className="prenda-stat">♻ Segunda Vida</span>
-                                </div>
-                              )}
+                              {/* Etiquetas y badges eliminados */}
                               
                               <div className="prenda-actions">
                                 {/* Botón principal cambia según si es tu perfil o no */}
@@ -707,30 +625,6 @@ function MiPerfil() {
                       <h3>Historial de Intercambios</h3>
                       <p>Tus intercambios en Double P Marketplace</p>
                     </div>
-                    
-                    <div className="intercambios-stats">
-                      <div className="intercambio-stat-card">
-                        <div className="stat-icon">✅</div>
-                        <div className="stat-info">
-                          <span className="stat-number">0</span>
-                          <span className="stat-label">Intercambios Completados</span>
-                        </div>
-                      </div>
-                      <div className="intercambio-stat-card">
-                        <div className="stat-icon">⏳</div>
-                        <div className="stat-info">
-                          <span className="stat-number">0</span>
-                          <span className="stat-label">En Proceso</span>
-                        </div>
-                      </div>
-                      <div className="intercambio-stat-card">
-                        <div className="stat-icon">💬</div>
-                        <div className="stat-info">
-                          <span className="stat-number">0</span>
-                          <span className="stat-label">Conversaciones Activas</span>
-                        </div>
-                      </div>
-                    </div>
 
                     <div className="empty-state">
                       <div className="empty-state-content">
@@ -766,7 +660,6 @@ function MiPerfil() {
                           }
                           alt={prenda.nombre_prenda}
                           className="media-item"
-                          onClick={() => navigate(`/gestion_prendas/${prenda.id_prenda}`)}
                           onError={(e) => {
                             e.target.onerror = null;
                             e.target.src = `${BACKEND_URL}/uploads/default.jpg`;

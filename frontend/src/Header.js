@@ -6,6 +6,7 @@ const Header = ({ setIsLoggedIn }) => {
   const location = useLocation();
   const [username, setUsername] = useState("");
   const [foto, setFoto] = useState("");
+  const [fotoTimestamp, setFotoTimestamp] = useState(Date.now());
   const [activeIndex, setActiveIndex] = useState(0);
 
   // Array con las rutas de navegación
@@ -17,11 +18,25 @@ const Header = ({ setIsLoggedIn }) => {
   ];
 
   useEffect(() => {
-    const nombreGuardado = localStorage.getItem("username");
-    const fotoGuardada = localStorage.getItem("foto_usuario");
-
-    if (nombreGuardado) setUsername(nombreGuardado);
-    if (fotoGuardada) setFoto(fotoGuardada);
+    const updateUserData = () => {
+      const nombreGuardado = localStorage.getItem("username");
+      const fotoGuardada = localStorage.getItem("foto_usuario");
+      if (nombreGuardado) setUsername(nombreGuardado);
+      if (fotoGuardada) setFoto(fotoGuardada);
+    };
+    const handleFotoUpdate = () => {
+      updateUserData();
+      setFotoTimestamp(Date.now());
+    };
+    updateUserData();
+    window.addEventListener("storage", updateUserData);
+    window.addEventListener("focus", updateUserData);
+    window.addEventListener("foto_usuario_actualizada", handleFotoUpdate);
+    return () => {
+      window.removeEventListener("storage", updateUserData);
+      window.removeEventListener("focus", updateUserData);
+      window.removeEventListener("foto_usuario_actualizada", handleFotoUpdate);
+    };
   }, []);
 
   // Detectar página activa y actualizar índice de la barra
@@ -172,7 +187,7 @@ const Header = ({ setIsLoggedIn }) => {
         >
           {foto ? (
             <img
-              src={`http://localhost:5000/uploads/${foto}`}
+              src={`http://localhost:5000/uploads/${foto}?t=${fotoTimestamp}`}
               alt="Perfil"
               className="profile-pic"
               style={{

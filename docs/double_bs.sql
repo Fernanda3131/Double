@@ -29,7 +29,7 @@ ADD COLUMN primer_apellido VARCHAR(100) AFTER segundo_nombre,
 ADD COLUMN segundo_apellido VARCHAR(100) AFTER primer_apellido;
 
 ALTER TABLE usuario DROP COLUMN nombre;
-
+ALTER TABLE usuario ADD COLUMN banner_usuario VARCHAR(1000) DEFAULT NULL;
 ALTER TABLE usuario MODIFY foto VARCHAR(255) NOT NULL DEFAULT 'default.jpg';
 
 

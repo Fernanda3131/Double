@@ -10,7 +10,9 @@ function DetallePrenda() {
   const [prenda, setPrenda] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [openChatModal, setOpenChatModal] = useState(false); 
+  const [openChatModal, setOpenChatModal] = useState(false);
+  // Carousel hooks SIEMPRE al inicio
+  const [current, setCurrent] = useState(0);
 
   useEffect(() => {
     if (!id) return;
@@ -39,91 +41,65 @@ function DetallePrenda() {
 
   // ✅ Mostrar solo las fotos que existan (sin cuadros vacíos)
   const fotos = [prenda.foto, prenda.foto2, prenda.foto3, prenda.foto4].filter(Boolean);
+  const hasMultipleFotos = fotos.length > 1;
+  // Eliminar flechas, solo click en imagen para avanzar
+  const goToNext = () => setCurrent((prev) => (prev === fotos.length - 1 ? 0 : prev + 1));
+
+  // Obtener el id_usuario actual desde localStorage
+  const miIdUsuario = localStorage.getItem("id_usuario");
 
   return (
-    <div className="detalle-prenda-container">
-      <div className="detalle-prenda-titulo">DETALLE PRENDA</div>
-      <div className="detalle-prenda-info-publicacion">
-        
-        {/* IZQUIERDA: Fotos de la prenda */}
-        <div className="detalle-prenda-fotos-publicacion">
-          <div className="detalle-prenda-fotos-titulo">Fotos</div>
-
-          <div style={{ marginBottom: "18px", textAlign: "center" }}>
-            <button
-              className="detalle-prenda-ver-perfil-btn"
-              onClick={() => navigate(`/perfil/${prenda.id_usuario}`)}
-              style={{
-                marginBottom: "8px",
-                background: "#a07e44",
-                color: "#fff",
-                border: "none",
-                borderRadius: "6px",
-                padding: "8px 18px",
-                fontSize: "1rem",
-                fontFamily: "league gothic",
-                cursor: "pointer",
-              }}
-            >
-              Ver perfil de {prenda.username}
-            </button>
-          </div>
-
-          {/* ✅ SOLO mostrar las fotos que existan */}
-          <div
-            className="detalle-prenda-fotos-grid"
-            style={{
-              gridTemplateColumns: fotos.length === 1 ? "1fr" : "repeat(2, 1fr)",
+    <div className="detalle-prenda-container minimal">
+      <div className="detalle-prenda-main-row">
+        {/* IZQUIERDA: Foto o carrusel */}
+        <div className="detalle-prenda-foto-col">
+          {hasMultipleFotos ? (
+            <div className="detalle-prenda-carrusel">
+              <img
+                src={`http://localhost:5000/uploads/${fotos[current]}`}
+                alt={`Foto ${current + 1}`}
+                className="detalle-prenda-foto-grande"
+                style={{ cursor: 'pointer' }}
+                onClick={goToNext}
+              />
+              <div className="detalle-prenda-carrusel-indicador">
+                {`${current + 1} / ${fotos.length}`}
+              </div>
+            </div>
+          ) : (
+            <img
+              src={`http://localhost:5000/uploads/${fotos[0]}`}
+              alt="Foto principal"
+              className="detalle-prenda-foto-grande"
+            />
+          )}
+        </div>
+        {/* DERECHA: Información */}
+        <div className="detalle-prenda-info-col">
+          <div className="detalle-prenda-titulo-minimal">{prenda.nombre}</div>
+          <div className="detalle-prenda-tipo-minimal">{prenda.tipo_publicacion}</div>
+          <button
+            className="detalle-prenda-ver-perfil-btn styled"
+            onClick={() => {
+              if (miIdUsuario && prenda.id_usuario && parseInt(miIdUsuario) === parseInt(prenda.id_usuario)) {
+                navigate("/MiPerfil");
+              } else {
+                navigate(`/perfil/${prenda.id_usuario}`);
+              }
             }}
           >
-            {fotos.map((foto, index) => (
-              <img
-                key={index}
-                src={`http://localhost:5000/uploads/${foto}`}
-                alt={`Foto ${index + 1}`}
-                className="detalle-prenda-foto-publicacion"
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* DERECHA: Información de la prenda */}
-        <div className="detalle-prenda-datos-publicacion">
-          <div className="detalle-prenda-label-publicacion">Nombre:</div>
-          <div className="detalle-prenda-campo-publicacion">{prenda.nombre}</div>
-
-          <div className="detalle-prenda-label-publicacion">Descripción:</div>
-          <div className="detalle-prenda-campo-publicacion">{prenda.descripcion}</div>
-
-          <div className="detalle-prenda-label-publicacion">Talla:</div>
-          <div className="detalle-prenda-campo-publicacion">{prenda.talla}</div>
-
-          <div className="detalle-prenda-label-publicacion">Tipo:</div>
-          <div className="detalle-prenda-campo-publicacion">{prenda.tipo_publicacion}</div>
-
-          <div className="detalle-prenda-label-publicacion">Valor →</div>
-          <div className="detalle-prenda-campo-publicacion">${prenda.valor}</div>
-
-          <div className="detalle-prenda-label-publicacion" style={{ marginTop: "18px" }}>
-            Califica la calidad de la prenda:
-          </div>
-          <div style={{ marginBottom: "18px" }}>
-            {[1, 2, 3, 4, 5].map((star) => (
-              <span key={star} style={{ fontSize: "2rem", color: "#a07e44", marginRight: 4 }}>
-                ★
-              </span>
-            ))}
-          </div>
-
-          <div style={{ display: 'flex', gap: '12px', marginTop: '12px', flexWrap: 'wrap' }}>
+            Ver perfil de {prenda.username}
+          </button>
+          <div className="detalle-prenda-precio-minimal">${prenda.valor}</div>
+          <div className="detalle-prenda-descripcion-minimal">{prenda.descripcion}</div>
+          <div className="detalle-prenda-talla-minimal">Talla: {prenda.talla}</div>
+          <div className="detalle-prenda-botones-minimal">
             <button
-              className="detalle-prenda-mensaje-btn-publicacion"
+              className="detalle-prenda-mensaje-btn-publicacion styled"
               onClick={() => setOpenChatModal(true)}
             >
               MENSAJE
             </button>
-
-            {/* Mostrar botón de pagar solo si es Venta */}
             {prenda.tipo_publicacion?.toLowerCase() === 'venta' && prenda.valor && (
               <BotonPagar 
                 amount={parseFloat(prenda.valor)}
@@ -133,7 +109,6 @@ function DetallePrenda() {
               />
             )}
           </div>
-
           {openChatModal && (
             <ChatModal
               open={openChatModal}
@@ -150,7 +125,6 @@ function DetallePrenda() {
           )}
         </div>
       </div>
-
       <button
         className="volver-btn"
         title="Volver al Catálogo"

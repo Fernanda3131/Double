@@ -67,7 +67,7 @@ const AgregarPublicacion = () => {
   };
 
   const renderPreview = (file) => {
-    if (!file) return <span className="upload-label">📤</span>;
+    if (!file) return <span className="upload-label"></span>;
     return <img src={URL.createObjectURL(file)} alt="preview" className="preview-img" />;
   };
 
@@ -77,7 +77,7 @@ const AgregarPublicacion = () => {
       <div className="contenido-central">
         {/* FOTOS */}
         <div className="fotos-lado-izquierdo">
-          <p className="texto">📸 Agrega hasta 4 fotos de tu prenda</p>
+          <p className="texto">Agrega hasta 4 fotos de tu prenda</p>
           <div className="fotos-grid">
             {fotos.map((foto, index) => {
               if (index === 0 || fotos[index - 1]) {
@@ -106,7 +106,7 @@ const AgregarPublicacion = () => {
         <div className="form-lado-derecho">
           <form onSubmit={handleSubmit}>
             <div className="campo">
-              <label>✨ Nombre de la prenda *</label>
+              <label> Nombre de la prenda *</label>
               <input
                 type="text"
                 value={nombre}
@@ -117,7 +117,7 @@ const AgregarPublicacion = () => {
             </div>
 
             <div className="campo">
-              <label>📝 Descripción</label>
+              <label> Descripción</label>
               <textarea
                 rows="4"
                 value={descripcion}
@@ -128,7 +128,7 @@ const AgregarPublicacion = () => {
             </div>
 
             <div className="campo">
-              <label>📏 Talla *</label>
+              <label> Talla *</label>
               <input
                 type="text"
                 value={talla}
@@ -139,7 +139,7 @@ const AgregarPublicacion = () => {
             </div>
 
             <div className="campo tipo-publicacion">
-              <label>🏷️ Tipo de publicación *</label>
+              <label> Tipo de publicación *</label>
               <button
                 type="button"
                 className={tipo === "Venta" ? "active" : ""}
@@ -157,7 +157,7 @@ const AgregarPublicacion = () => {
             </div>
 
             <div className="campo valor">
-              <label>💰 Valor {tipo === "Intercambio" ? "(opcional)" : "*"}</label>
+              <label> Valor {tipo === "Intercambio" ? "(opcional)" : "*"}</label>
               <input
                 type="number"
                 value={valor}
@@ -169,7 +169,7 @@ const AgregarPublicacion = () => {
             </div>
 
             <div className="campo estado">
-              <label>🔄 Estado de disponibilidad *</label>
+              <label> Estado de disponibilidad *</label>
               <select value={estado} onChange={(e) => setEstado(e.target.value)}>
                 <option value="Disponible">Disponible</option>
                 <option value="No Disponible">No Disponible</option>
@@ -177,7 +177,7 @@ const AgregarPublicacion = () => {
             </div>
 
             <div className="campo valoracion">
-              <label>⭐ Califica la calidad de tu prenda *</label>
+              <label> Califica la calidad de tu prenda *</label>
               <div>
                 {[1, 2, 3, 4, 5].map((star) => (
                   <span

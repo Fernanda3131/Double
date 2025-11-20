@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 import PublicHeader from './PublicHeader';
-import ChatModal from './ChatModal';
+import ChatList from './ChatList';
 import './Home.css';
 
 export default function Home() {
@@ -45,7 +45,6 @@ export default function Home() {
   const idUsuario = localStorage.getItem("id_usuario");
 
   // 🔹 Cargar publicaciones y lista de deseos del usuario actual
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetch("http://localhost:5000/api/publicaciones")
       .then((res) => {
@@ -58,7 +57,7 @@ export default function Home() {
 
         console.debug("/api/publicaciones ->", items);
 
-        // El backend ya filtra por estado (cuando aplica). Aqu usamos los items tal cual
+        // El backend ya filtra por estado (cuando aplica). Aquí usamos los items tal cual
         items.sort((a, b) => {
           if (a.fecha_publicacion && b.fecha_publicacion) {
             return new Date(b.fecha_publicacion) - new Date(a.fecha_publicacion);
@@ -343,99 +342,63 @@ export default function Home() {
         </div>
       </div>
 
-      {/* 🔎 Filtros y barra de búsqueda */}
-      <div className="filtros-dropdown-wrapper">
-        <div className="filtros-top-row" style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          {/* Bloque absolutamente centrado como conjunto */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'none', justifyContent: 'center', width: '100%', maxWidth: '900px', margin: '0 auto' }}>
-            <div
-              className="filtros-dropdown-trigger"
-              onClick={() => setMostrarFiltros(!mostrarFiltros)}
-              style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+      {/* 🔎 Bloque centrado de búsqueda y filtros */}
+      <div className="catalogo-busqueda-filtros">
+        <div className="catalogo-busqueda-filtros-inner">
+          <div className="catalogo-busqueda-bar">
+            <button
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#b8904a', fontSize: 22, marginRight: 8, display: 'flex', alignItems: 'center' }}
+              onClick={() => setMostrarFiltros((v) => !v)}
+              aria-label="Mostrar filtros"
             >
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6B5B43" strokeWidth="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.35-4.35"></path>
-              </svg>
-            </div>
-            <div className="busqueda-container" style={{ flex: 1, minWidth: '600px', maxWidth: '900px', borderRadius: '22px', background: '#bfa06a', padding: '0 18px', display: 'flex', alignItems: 'center', height: '40px', margin: '0 auto' }}>
-              <input
-                type="text"
-                className="busqueda-input"
-                placeholder="Barra de busqueda"
-                value={busqueda}
-                onChange={(e) => setBusqueda(e.target.value)}
-                style={{ width: '100%', border: 'none', outline: 'none', background: 'transparent', fontWeight: 'bold', fontSize: '20px', color: '#2d210c', textAlign: 'left' }}
-              />
-            </div>
+              <svg width="22" height="22" fill="none" stroke="#b8904a" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </button>
+            <input
+              className="catalogo-busqueda-input"
+              type="text"
+              placeholder="Barra de busqueda"
+              value={busqueda}
+              onChange={e => setBusqueda(e.target.value)}
+            />
           </div>
-        </div>
-
-        {/* Dropdown de filtros */}
-        {mostrarFiltros && (
-          <div className={`filtros-dropdown-content ${mostrarFiltros ? 'show' : ''}`}> 
-            <div className="filtros-container">
-              <div className="filtro-item">
-                <label>Tipo de publicación</label>
-                <select
-                  value={filtroIntercambio}
-                  onChange={(e) => setFiltroIntercambio(e.target.value)}
-                >
-                  <option value="">Todos los tipos</option>
-                  <option value="intercambio">Solo intercambio</option>
-                  <option value="venta">Solo venta</option>
+          {mostrarFiltros && (
+            <div className="catalogo-filtros-row" style={{ marginTop: 18 }}>
+              <div className="catalogo-filtro-item">
+                <label>Tipo</label>
+                <select value={filtroIntercambio} onChange={e => setFiltroIntercambio(e.target.value)}>
+                  <option value="">Todos</option>
+                  <option value="intercambio">Intercambio</option>
+                  <option value="venta">Venta</option>
                 </select>
-                <div className="filtro-indicator"></div>
               </div>
-
-              <div className="filtro-item">
+              <div className="catalogo-filtro-item">
                 <label>Talla</label>
-                <select
-                  value={filtroTalla}
-                  onChange={(e) => setFiltroTalla(e.target.value)}
-                >
-                  <option value="">Todas las tallas</option>
+                <select value={filtroTalla} onChange={e => setFiltroTalla(e.target.value)}>
+                  <option value="">Todas</option>
                   <option value="S">S</option>
                   <option value="M">M</option>
                   <option value="L">L</option>
                   <option value="XL">XL</option>
                   <option value="XXL">XXL</option>
                 </select>
-                <div className="filtro-indicator"></div>
               </div>
-
-              <div className="filtro-item">
-                <label>Rango de precio</label>
-                <select
-                  value={filtroPrecio}
-                  onChange={(e) => setFiltroPrecio(e.target.value)}
-                >
-                  <option value="">Todos los precios</option>
+              <div className="catalogo-filtro-item">
+                <label>Precio</label>
+                <select value={filtroPrecio} onChange={e => setFiltroPrecio(e.target.value)}>
+                  <option value="">Todos</option>
                   <option value="menor_50">Menor a $50.000</option>
                   <option value="mayor_10">Mayor a $10.000</option>
                   <option value="rango">Entre $10.000 y $50.000</option>
                 </select>
-                <div className="filtro-indicator"></div>
               </div>
-            </div>
-
-            {/* Botón limpiar filtros */}
-            {hayFiltrosActivos && (
-              <div className="filtros-actions">
-                <button className="limpiar-filtros-btn" onClick={limpiarFiltros}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M3 6h18"/>
-                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
-                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
-                    <line x1="10" y1="11" x2="10" y2="17"/>
-                    <line x1="14" y1="11" x2="14" y2="17"/>
-                  </svg>
+              {hayFiltrosActivos && (
+                <button className="catalogo-limpiar-filtros-btn" onClick={limpiarFiltros}>
                   Limpiar filtros
                 </button>
-              </div>
-            )}
-          </div>
-        )}
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="catalogo-container">
@@ -504,10 +467,11 @@ export default function Home() {
 
       {/* Modal de Chat */}
       {openChatModal && (
-        <ChatModal
-          open={openChatModal}
-          onClose={() => setOpenChatModal(false)}
-        />
+        <div className="chat-modal-overlay" onClick={() => setOpenChatModal(false)}>
+          <div className="chat-modal-container" onClick={(e) => e.stopPropagation()}>
+            <ChatList onClose={() => setOpenChatModal(false)} />
+          </div>
+        </div>
       )}
     </div>
   );

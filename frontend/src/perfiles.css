@@ -1402,7 +1402,8 @@ body {
 }
 
 .calculator-input[type="number"] {
-  -moz-appearance: textfield;
+  appearance: textfield;       /* estándar */
+  -moz-appearance: textfield;  /* Firefox */
 }
 
 .calculator-result {

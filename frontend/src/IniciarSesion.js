@@ -98,7 +98,9 @@ function IniciarSesion({ setIsLoggedIn }) {
       if (response.ok && result.success) {
         localStorage.setItem("id_usuario", result.id_usuario || "");
         localStorage.setItem("username", result.username || username);
-        localStorage.setItem("token", "token_simulado");
+        if (result.token) {
+          localStorage.setItem("token", result.token);
+        }
         if (result.foto) {
           localStorage.setItem("foto_usuario", result.foto);
         }

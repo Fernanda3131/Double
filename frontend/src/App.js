@@ -4,7 +4,6 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./Home";
 import Iniciar from "./IniciarSesion";
 import Agregar from "./AgregarPublicacion";
-import Editar from "./editar_perfil";
 import Register from "./register";
 import MiPerfil from "./MiPerfil";
 import DetallePrenda from "./DetallePrenda";
@@ -32,7 +31,6 @@ import Header from "./Header";
 import HeaderAdmin from "./HeaderAdmin";
 import Footer from "./Footer";
 import PublicHeader from "./PublicHeader";
-
 
 // 🔒 Rutas privadas
 function PrivateRoute({ isLoggedIn, children }) {
@@ -99,7 +97,6 @@ function RootRedirect() {
   return <Navigate to="/catalogo" replace />;
 }
 
-
 // 🚀 APP PRINCIPAL
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -122,7 +119,6 @@ function App() {
       window.removeEventListener("abrir-chat-flotante", handleOpenChat);
     };
   }, []);
-
 
   return (
     <div className="App">
@@ -174,7 +170,7 @@ function App() {
             }
           />
 
-          {/* 👤 Perfil (nombre original) */}
+          {/* 👤 Perfil */}
           <Route
             path="/MiPerfil"
             element={
@@ -186,7 +182,7 @@ function App() {
             }
           />
 
-          {/* 👤 Perfil (en minúsculas como pediste) */}
+          {/* 👤 Perfil alterno */}
           <Route
             path="/mi_perfil"
             element={
@@ -205,18 +201,6 @@ function App() {
               <PrivateRoute isLoggedIn={isLoggedIn}>
                 <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
                   <Agregar />
-                </Layout>
-              </PrivateRoute>
-            }
-          />
-
-          {/* ✏ Editar perfil */}
-          <Route
-            path="/editar"
-            element={
-              <PrivateRoute isLoggedIn={isLoggedIn}>
-                <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
-                  <Editar />
                 </Layout>
               </PrivateRoute>
             }
@@ -420,14 +404,14 @@ function App() {
         </Routes>
       </main>
 
-        {/* Chat Modal */}
-        {isLoggedIn && openChatModal && (
-          <ChatModal
-            open={openChatModal}
-            onClose={() => setOpenChatModal(false)}
-          />
-        )}
-      </div>
+      {/* Chat Modal */}
+      {isLoggedIn && openChatModal && (
+        <ChatModal
+          open={openChatModal}
+          onClose={() => setOpenChatModal(false)}
+        />
+      )}
+    </div>
   );
 }
 

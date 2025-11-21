@@ -29,7 +29,7 @@ export default function Home() {
   const carouselData = [
     {
       image: "/home1.jpeg",
-      title: "DOUBLE P",
+      title: "DOUBLE π",
       subtitle: "Moda Sostenible",
       description: "Descubre una nueva forma de vestir con estilo y responsabilidad. Nuestra colección exclusiva te ofrece las últimas tendencias en moda sostenible."
     },
@@ -52,72 +52,33 @@ export default function Home() {
         return res.json();
       })
       .then((data) => {
-        // El backend puede devolver { ok: true, publicaciones: [...] } o directamente un array
         const items = Array.isArray(data) ? data : data.publicaciones || [];
-
-        console.debug("/api/publicaciones ->", items);
-
-        // El backend ya filtra por estado (cuando aplica). Aquí usamos los items tal cual
         items.sort((a, b) => {
           if (a.fecha_publicacion && b.fecha_publicacion) {
             return new Date(b.fecha_publicacion) - new Date(a.fecha_publicacion);
           }
           return 0;
         });
-
         setProductos(items);
       })
       .catch((err) => {
         console.error("❌ Error al cargar productos:", err);
-        
-        // Datos de respaldo para mostrar cuando no hay conexión con el backend
-        const productosMock = [
-          {
-            id_publicacion: 1,
-            descripcion_publicacion: "Camiseta casual en excelente estado",
-            nombre_prenda: "Camiseta Básica",
-            descripcion_prenda: "Camiseta de algodón 100%, muy cómoda",
-            talla: "M",
-            valor: 25000,
-            tipo_publicacion: "venta",
-            estado: "Disponible",
-            foto_url: "https://via.placeholder.com/300x400/9A7738/ffffff?text=Camiseta"
-          },
-          {
-            id_publicacion: 2,
-            descripcion_publicacion: "Pantalón de mezclilla vintage",
-            nombre_prenda: "Jean Vintage",
-            descripcion_prenda: "Jean de los años 90, estilo retro",
-            talla: "L",
-            valor: 45000,
-            tipo_publicacion: "intercambio",
-            estado: "Disponible",
-            foto_url: "https://via.placeholder.com/300x400/B08A43/ffffff?text=Jean"
-          },
-          {
-            id_publicacion: 3,
-            descripcion_publicacion: "Blusa elegante para ocasiones especiales",
-            nombre_prenda: "Blusa Elegante",
-            descripcion_prenda: "Blusa de seda con detalles bordados",
-            talla: "S",
-            valor: 35000,
-            tipo_publicacion: "venta",
-            estado: "Disponible",
-            foto_url: "https://via.placeholder.com/300x400/D4AF37/ffffff?text=Blusa"
-          }
-          ,
-  
-        ];
-        
-        setProductos(productosMock);
-        setError(null); // Limpiar el error ya que tenemos datos de respaldo
+        setProductos([]);
+        setError("No se pudieron cargar productos");
       })
       .finally(() => setLoading(false));
 
     if (idUsuario) {
-      const listaGuardada =
-        JSON.parse(localStorage.getItem(`lista_deseos_${idUsuario}`)) || [];
-      setListaDeseos(listaGuardada);
+      fetch(`http://localhost:5000/deseos/usuario/${idUsuario}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            setListaDeseos(data.deseos || []);
+          } else {
+            setListaDeseos([]);
+          }
+        })
+        .catch(() => setListaDeseos([]));
     }
   }, [idUsuario]);
 
@@ -133,22 +94,33 @@ export default function Home() {
   // 🔹 Agregar/Quitar de la lista de deseos
   const toggleDeseo = (prod) => {
     if (!idUsuario) return;
-
     const yaEsta = listaDeseos.find(
       (item) => item.id_publicacion === prod.id_publicacion
     );
-    let nuevaLista;
-
-    if (yaEsta) {
-      nuevaLista = listaDeseos.filter(
-        (item) => item.id_publicacion !== prod.id_publicacion
-      );
-    } else {
-      nuevaLista = [...listaDeseos, prod];
-    }
-
-    setListaDeseos(nuevaLista);
-    localStorage.setItem(`lista_deseos_${idUsuario}`, JSON.stringify(nuevaLista));
+    const url = yaEsta
+      ? `http://localhost:5000/deseos/quitar`
+      : `http://localhost:5000/deseos/agregar`;
+    fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id_usuario: idUsuario, id_publicacion: prod.id_publicacion })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          // Siempre recargar la lista de deseos desde el backend
+          fetch(`http://localhost:5000/deseos/usuario/${idUsuario}`)
+            .then(res => res.json())
+            .then(data => {
+              if (data.success) {
+                setListaDeseos(data.deseos || []);
+              } else {
+                setListaDeseos([]);
+              }
+            })
+            .catch(() => setListaDeseos([]));
+        }
+      });
   };
 
   // 🔹 Verificar si está en deseos
@@ -304,7 +276,7 @@ export default function Home() {
         <div className="hero-content" style={{ zIndex: 4 }}>
           <div className="hero-text">
             {/* Título fijo - no se anima */}
-            <h1 className="hero-title hero-title-fixed">DOUBLE P</h1>
+            <h1 className="hero-title hero-title-fixed">DOUBLE π</h1>
             
             {/* Contenido que sí se anima */}
             <div className={`hero-dynamic-content ${isTextTransitioning ? 'text-transitioning' : ''}`}>

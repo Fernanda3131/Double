@@ -16,9 +16,20 @@ export default function ListaDeDeseos() {
       navigate("/iniciar_sesion");
       return;
     }
-    const lista = JSON.parse(localStorage.getItem(`lista_deseos_${idUsuario}`)) || [];
-    setDeseos(lista);
-    setLoading(false);
+    fetch(`${BACKEND_URL}/deseos/usuario/${idUsuario}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setDeseos(data.deseos || []);
+        } else {
+          setDeseos([]);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        setDeseos([]);
+        setLoading(false);
+      });
   }, [navigate]);
 
   const handleVerMas = (id_prenda) => {
@@ -27,9 +38,18 @@ export default function ListaDeDeseos() {
 
   const handleQuitarDeseo = (id_publicacion) => {
     const idUsuario = localStorage.getItem("id_usuario");
-    const nuevaLista = deseos.filter((d) => d.id_publicacion !== id_publicacion);
-    setDeseos(nuevaLista);
-    localStorage.setItem(`lista_deseos_${idUsuario}`, JSON.stringify(nuevaLista));
+    if (!idUsuario) return;
+    fetch(`${BACKEND_URL}/deseos/quitar`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id_usuario: idUsuario, id_publicacion })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setDeseos(deseos.filter((d) => d.id_publicacion !== id_publicacion));
+        }
+      });
   };
 
   const handleIrACatalogo = () => {
@@ -115,7 +135,10 @@ export default function ListaDeDeseos() {
                         onClick={() => handleQuitarDeseo(prod.id_publicacion)}
                         title="Quitar de favoritos"
                       >
-                        <span className="heart-icon">❤️</span>
+                        {/* Corazón relleno igual que en los cards de publicación */}
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="#a07e44" stroke="#a07e44" strokeWidth="2" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
                       </button>
                     </div>
                   </div>

@@ -1,5 +1,5 @@
 /* ==========================================
-   LISTA DE DESEOS - DISEÑO MINIMALISTA DOUBLE P
+  LISTA DE DESEOS - DISEÑO MINIMALISTA DOUBLE π
    ========================================== */
 
 .lista-deseos-main {
@@ -88,18 +88,6 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
-}
-
-.lista-deseos-item::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #6c757d 0%, #b8904a 50%, #6c757d 100%);
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
 }
 
 .lista-deseos-item:hover::before {

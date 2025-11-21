@@ -19,7 +19,7 @@ export default function PreguntasFrecuentes() {
       section: "Sobre la plataforma",
       questions: [
         {
-          q: "¿Qué es Double P?",
+          q: "¿Qué es Double π?",
           a: "Double P es una plataforma web que conecta a personas con tallas plus size y petite para intercambiar, vender o donar ropa de segunda mano. Promovemos la inclusión, la sostenibilidad y el consumo responsable de moda."
         },
         {

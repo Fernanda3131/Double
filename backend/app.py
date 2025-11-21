@@ -56,6 +56,7 @@ app.config["MAIL_DEFAULT_SENDER"] = "appdoublepp@gmail.com"
 
 mail = Mail(app)
 
+
 # Importar y registrar Blueprints
 from perfiles import perfiles_bp
 from login import login_bp
@@ -71,6 +72,7 @@ from mensaje import mensaje_bp
 from recuperar_contrasena import recuperar_bp
 from chat import chat_bp
 from usuarios import usuarios_bp
+from deseos import deseos_bp
 
 # Registrar blueprints
 app.register_blueprint(perfiles_bp)
@@ -89,7 +91,9 @@ app.register_blueprint(prendas_caras_vs_economicas_bp)
 app.register_blueprint(mensaje_bp)
 app.register_blueprint(recuperar_bp)
 app.register_blueprint(chat_bp)
+
 app.register_blueprint(usuarios_bp)
+app.register_blueprint(deseos_bp)
 
 
 

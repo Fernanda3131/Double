@@ -8,7 +8,7 @@ export default function PoliticasSeguridad() {
   return (
     <div className="ps-root">
       <div className="ps-header">
-        <h1 className="ps-title">🔒 Políticas de Seguridad de Double P</h1>
+        <h1 className="ps-title">🔒 Políticas de Seguridad de Double π</h1>
         <button className="mg-back-btn" onClick={() => navigate('/configuracion')}>← Volver</button>
       </div>
 
@@ -17,7 +17,7 @@ export default function PoliticasSeguridad() {
           <h2>1. Objetivo</h2>
           <p>
             El objetivo de esta política es establecer los lineamientos que garanticen la confidencialidad, integridad y disponibilidad
-            de la información gestionada por Double P, así como proteger los datos de usuarios, transacciones, inventarios y la infraestructura técnica del sistema.
+            de la información gestionada por Double π, así como proteger los datos de usuarios, transacciones, inventarios y la infraestructura técnica del sistema.
           </p>
         </section>
 
@@ -25,14 +25,14 @@ export default function PoliticasSeguridad() {
           <h2>2. Alcance</h2>
           <p>
             Aplica a todas las personas que participan en el proyecto: desarrolladores, administradores, usuarios con acceso al sistema, proveedores de servicios,
-            y cualquier actor que interactúe con los activos de información de Double P.
+            y cualquier actor que interactúe con los activos de información de Double π.
           </p>
         </section>
 
         <section className="ps-section">
           <h2>3. Definiciones</h2>
           <ul>
-            <li><strong>Activo de información:</strong> datos, sistemas, bases de datos, aplicaciones, infraestructura y documentos relacionados con Double P.</li>
+            <li><strong>Activo de información:</strong> datos, sistemas, bases de datos, aplicaciones, infraestructura y documentos relacionados con Double π.</li>
             <li><strong>Usuario:</strong> cualquier persona que accede al sistema (usuarios finales, administradores, personal técnico).</li>
             <li><strong>Incidente de seguridad:</strong> evento que compromete o podría comprometer la seguridad de los activos de información.</li>
             <li><strong>Roles y permisos:</strong> niveles de acceso asignados según el perfil del usuario (por ejemplo: administrador, moderador, usuario estándar).</li>
@@ -94,7 +94,7 @@ export default function PoliticasSeguridad() {
         <section className="ps-section">
           <h2>8. Condiciones económicas y retención por venta</h2>
           <ul>
-            <li>Double P actúa como intermediario en las transacciones.</li>
+            <li>Double π actúa como intermediario en las transacciones.</li>
             <li>Por cada venta, se retiene el 4% del valor total como comisión.</li>
             <li>El porcentaje se descuenta antes de transferir el monto al vendedor.</li>
             <li>La comisión cubre gastos operativos, mantenimiento y seguridad.</li>

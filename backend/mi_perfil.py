@@ -382,7 +382,7 @@ def actualizar_perfil():
                     valores.append(email_usuario)
                 
                 if talla_usuario:
-                    campos.append("talla_usuario = %s")
+                    campos.append("talla = %s")
                     valores.append(talla_usuario)
                 
                 if fecha_nacimiento:
@@ -390,14 +390,14 @@ def actualizar_perfil():
                     valores.append(fecha_nacimiento)
                 
                 if foto_nombre:
-                    campos.append("foto_usuario = %s")
+                    campos.append("foto = %s")
                     valores.append(foto_nombre)
                 
                 if campos:
                     valores.append(id_usuario)  # Para el WHERE
                     
                     consulta = f"""
-                        UPDATE usuarios 
+                        UPDATE usuario 
                         SET {', '.join(campos)}
                         WHERE id_usuario = %s
                     """
@@ -408,7 +408,8 @@ def actualizar_perfil():
                     print(f"✅ Perfil actualizado: {len(campos)} campos")
                     return jsonify({
                         "message": "Perfil actualizado correctamente",
-                        "campos_actualizados": len(campos)
+                        "campos_actualizados": len(campos),
+                        "foto": foto_nombre if foto_nombre else None
                     }), 200
                 else:
                     return jsonify({"message": "No hay cambios para actualizar"}), 200

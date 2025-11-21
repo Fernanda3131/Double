@@ -30,7 +30,7 @@ export default function CalculadoraPrendas() {
   return (
     <div className="calculadora-container">
       <div className="calculadora-wrapper">
-        <h1 className="calculadora-titulo">Calculadora Double P</h1>
+        <h1 className="calculadora-titulo">Calculadora Double π</h1>
         <p className="calculadora-subtitulo">
           Calcula el valor estimado de tus prendas de forma inteligente
         </p>

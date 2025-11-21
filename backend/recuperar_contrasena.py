@@ -52,7 +52,7 @@ def recuperar_contrasena():
         # Enviar correo
         try:
             msg = Message(
-                'Recuperación de contraseña - Double P',
+                'Recuperación de contraseña - Double π',
                 recipients=[email]
             )
             
@@ -63,7 +63,7 @@ def recuperar_contrasena():
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                 <h2 style="color: #9A7738;">Recuperación de contraseña</h2>
                 <p>Hola {usuario[1]},</p>
-                <p>Recibimos una solicitud para restablecer la contraseña de tu cuenta en Double P.</p>
+                <p>Recibimos una solicitud para restablecer la contraseña de tu cuenta en Double π.</p>
                 <p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>
                 <div style="text-align: center; margin: 30px 0;">
                     <a href="{recovery_url}" 

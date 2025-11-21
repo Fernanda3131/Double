@@ -6,6 +6,7 @@ const Header = ({ setIsLoggedIn }) => {
   const location = useLocation();
   const [username, setUsername] = useState("");
   const [foto, setFoto] = useState("");
+  const [fotoKey, setFotoKey] = useState(Date.now());
   const [activeIndex, setActiveIndex] = useState(0);
 
   // Array con las rutas de navegación
@@ -22,6 +23,17 @@ const Header = ({ setIsLoggedIn }) => {
 
     if (nombreGuardado) setUsername(nombreGuardado);
     if (fotoGuardada) setFoto(fotoGuardada);
+
+    // Escuchar evento global para actualizar la foto del header
+    const actualizarFoto = () => {
+      const nuevaFoto = localStorage.getItem("foto_usuario") || "";
+      setFoto(nuevaFoto);
+      setFotoKey(Date.now()); // Forzar re-render aunque el nombre sea igual
+    };
+    window.addEventListener("foto_usuario_actualizada", actualizarFoto);
+    return () => {
+      window.removeEventListener("foto_usuario_actualizada", actualizarFoto);
+    };
   }, []);
 
   // Detectar página activa y actualizar índice de la barra
@@ -81,7 +93,7 @@ const Header = ({ setIsLoggedIn }) => {
       >
         <img
           src="/LOGO.png"
-          alt="Double P Logo"
+          alt="Double π Logo"
           className="logo-img"
           style={{
             width: '40px',
@@ -101,7 +113,7 @@ const Header = ({ setIsLoggedIn }) => {
             fontStyle: 'italic',
             textDecoration: 'none'
           }}
-        >Double_P</span>
+        >Double π</span>
       </div>
 
       {/* Navegación central con barra deslizante */}
@@ -173,7 +185,8 @@ const Header = ({ setIsLoggedIn }) => {
         >
           {foto ? (
             <img
-              src={`http://localhost:5000/uploads/${foto}?t=${Date.now()}`}
+              key={fotoKey}
+              src={`http://localhost:5000/uploads/${foto}?t=${fotoKey}`}
               alt="Perfil"
               className="profile-pic"
               style={{

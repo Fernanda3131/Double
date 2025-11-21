@@ -4,7 +4,7 @@ import "./BotonPerfilUsuario.css";
 
 /**
  * Componente reutilizable para mostrar un botón de perfil de usuario
- * con diseño minimalista Double P
+ * con diseño minimalista Double π
  * 
  * @param {Object} props - Propiedades del componente
  * @param {number} props.userId - ID del usuario

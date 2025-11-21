@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import EditarPerfilPanel from "./EditarPerfilPanel";
 import { useNavigate } from "react-router-dom";
 import "./perfiles.css";
 
 const BACKEND_URL = "http://localhost:5000";
 
 function MiPerfil() {
+    const [isEditPanelOpen, setIsEditPanelOpen] = useState(false); // Panel flotante
   const [perfil, setPerfil] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -76,31 +78,6 @@ function MiPerfil() {
     }
   };
 
-  const cargarPerfilPorId = async (id) => {
-    try {
-      const response = await fetch(`${BACKEND_URL}/api/perfil_usuario/${id}?t=${Date.now()}`, {
-        method: "GET",
-        credentials: "include",
-        cache: "no-cache",
-        headers: {
-          "Cache-Control": "no-cache, no-store, must-revalidate",
-          Pragma: "no-cache",
-          Expires: "0",
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("📥 Datos del perfil por ID:", data);
-        procesarDatosPerfil(data);
-      } else {
-        throw new Error("Error al cargar el perfil por ID");
-      }
-    } catch (error) {
-      console.error("❌ Error al cargar el perfil por ID:", error);
-      setLoading(false);
-    }
-  };
 
   const cargarPerfilPorSesion = async () => {
     try {
@@ -222,30 +199,8 @@ function MiPerfil() {
     );
   };
 
-  const renderStars = (promedio) => {
-    const rounded = Math.round(promedio);
-    return (
-      <span className="stars-text">
-        {[1, 2, 3, 4, 5].map((i) => (
-          <span key={i} className={`star-black ${i <= rounded ? "active" : ""}`}>
-            {i <= rounded ? "★" : "☆"}
-          </span>
-        ))}
-      </span>
-    );
-  };
 
   // --- Funciones de edición ---
-  const handleEditClick = () => {
-    setEditForm({
-      PrimerNombre: perfil.PrimerNombre || '',
-      PrimerApellido: perfil.PrimerApellido || '',
-      email_usuario: perfil.email_usuario || '',
-      talla_usuario: perfil.talla_usuario || '',
-      fecha_nacimiento: perfil.fecha_nacimiento || ''
-    });
-    setIsEditMode(true);
-  };
 
   const handleCancelEdit = () => {
     setIsEditMode(false);
@@ -384,7 +339,17 @@ function MiPerfil() {
   }
 
   return (
-    <div className="profile-container">
+    <div className="profile-container" style={{position: 'relative'}}>
+      {/* Botón de editar perfil solo si es el propio perfil y hay datos */}
+      {isOwnProfile && perfil && (
+        <button
+          className="editar-perfil-btn"
+          style={{position: 'absolute', top: 24, right: 24, zIndex: 10}}
+          onClick={() => setIsEditPanelOpen(true)}
+        >
+          ✏️ Editar Perfil
+        </button>
+      )}
       {perfil ? (
         <>
 
@@ -654,7 +619,7 @@ function MiPerfil() {
                       <button className="sidebar-btn primary" onClick={() => window.dispatchEvent(new CustomEvent('abrir-chat-flotante'))}>
                         <span>💬 Mis Mensajes</span>
                       </button>
-                      <button className="sidebar-btn secondary" onClick={() => navigate("/editar")}>\
+                      <button className="sidebar-btn secondary" onClick={() => setIsEditPanelOpen(true)}>
                         <span>✏ Editar Perfil</span>
                       </button>
                     </>
@@ -773,7 +738,7 @@ function MiPerfil() {
                           <div className="empty-state-icon">👕</div>
                           <h3 className="empty-state-title">¡Comienza tu Colección!</h3>
                           <p className="empty-state-text">
-                            Sube tus primeras prendas y únete a la comunidad de moda sostenible de Double P.
+                            Sube tus primeras prendas y únete a la comunidad de moda sostenible de Double π.
                             Cada prenda que compartes ayuda a crear un mundo más sustentable.
                           </p>
                           <button className="empty-state-btn" onClick={() => navigate("/agregar")}>
@@ -789,7 +754,7 @@ function MiPerfil() {
                   <div className="intercambios-section">
                     <div className="intercambios-header">
                       <h3>Historial de Intercambios</h3>
-                      <p>Tus intercambios en Double P Marketplace</p>
+                      <p>Tus intercambios en Double π Marketplace</p>
                     </div>
 
                     <div className="empty-state">
@@ -850,7 +815,7 @@ function MiPerfil() {
             <div className="calculator-card">
               <div className="calculator-content">
                 <h5 className="calculator-title" style={{ fontSize: '1.1rem', whiteSpace: 'nowrap', fontWeight: 700, margin: 0 }}>
-                  🧮 Calculadora Double P
+                  🧮 Calculadora Double π
                 </h5>
                 <p className="calculator-description">
                   Calcula el valor estimado de tus prendas y descubre oportunidades de intercambio perfectas.
@@ -1023,6 +988,24 @@ function MiPerfil() {
           </button>
         </div>
       )}
+      {/* Panel flotante de edición de perfil */}
+      <EditarPerfilPanel
+        open={isEditPanelOpen}
+        onClose={() => {
+          setIsEditPanelOpen(false);
+          // Recargar perfil al cerrar el panel
+          setTimeout(() => cargarPerfil(), 300);
+        }}
+        perfil={{
+          ...perfil,
+          nombre: perfil?.PrimerNombre || "",
+          foto_usuario:
+            perfil?.foto_usuario_preview ||
+            (perfil?.foto_usuario
+              ? `${BACKEND_URL}/uploads/${perfil.foto_usuario.replace(/^\/+/,'')}`
+              : "")
+        }}
+      />
     </div>
   );
 }

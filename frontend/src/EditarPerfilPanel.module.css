@@ -1,0 +1,157 @@
+/* EditarPerfilPanel.module.css - Panel flotante inspirado en la referencia visual */
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.18);
+  z-index: 1000;
+  display: flex;
+  justify-content: flex-end;
+  align-items: stretch;
+  transition: background 0.3s;
+}
+
+.panel {
+  background: #fff;
+  width: 38vw;
+  max-width: 480px;
+  min-width: 320px;
+  height: 100vh;
+  border-radius: 0;
+  box-shadow: 0 8px 32px 0 rgba(180, 150, 90, 0.13), 0 1.5px 8px 0 rgba(180,150,90,0.08);
+  padding: 88px 38px 32px 38px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transform: translateX(100%);
+  transition: transform 0.38s cubic-bezier(.7,.2,.2,1);
+  overflow-y: auto;
+}
+
+.panel.open {
+  transform: translateX(0);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  background: none;
+  border-radius: 0;
+  padding: 10px 0 8px 0;
+  box-shadow: none;
+  max-width: 340px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+}
+
+.title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #a07e44;
+  letter-spacing: 0.01em;
+  margin-left: 0;
+  flex: 1;
+  text-align: center;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  font-size: 1.18rem;
+  color: #b88c6a;
+  cursor: pointer;
+  padding: 2px 8px;
+  border-radius: 50%;
+  transition: background 0.18s;
+  position: fixed;
+  right: 32px;
+  top: 24px;
+  z-index: 1100;
+}
+.closeBtn:hover {
+  background: #f7e7d6;
+}
+
+.form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  margin-top: 18px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 6px;
+  align-items: flex-start;
+}
+
+.label {
+  font-size: 1.13rem;
+  color: #a07e44;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.input, .fileInput {
+  padding: 13px 16px;
+  border-radius: 12px;
+  border: 1.5px solid #e8ddc6;
+  font-size: 1.13rem;
+  background: #f9f7f3;
+  color: #7a4a2a;
+  outline: none;
+  transition: border 0.2s;
+  box-shadow: 0 1.5px 6px #e8ddc622;
+}
+.input:focus, .fileInput:focus {
+  border: 1.5px solid #a07e44;
+  background: #fff;
+}
+
+.imagePreview {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2.5px solid #e8ddc6;
+  margin-bottom: 14px;
+  background: #fff8f3;
+  box-shadow: 0 4px 18px 0 #e8ddc655, 0 1.5px 8px #f7c9b655;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  transition: box-shadow 0.22s, border-color 0.22s, transform 0.18s;
+}
+.imagePreview:hover {
+  box-shadow: 0 8px 32px 0 #f7c9b655, 0 2px 12px #e8ddc655;
+  border-color: #f7e7d6;
+  transform: scale(1.04) rotate(-2deg);
+}
+
+.saveBtn {
+  margin-top: 48px;
+  background: #a07e44;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.18rem;
+  border: none;
+  border-radius: 22px;
+  padding: 17px 0;
+  box-shadow: 0 2px 12px #e8ddc655;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: background 0.18s, color 0.18s;
+}
+.saveBtn:hover {
+  background: #c2a96a;
+  color: #fffbe9;
+}

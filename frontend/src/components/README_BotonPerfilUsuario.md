@@ -1,6 +1,6 @@
 # Componente BotonPerfilUsuario
 
-Componente reutilizable para mostrar información de usuario con botón de navegación al perfil. Diseño minimalista con colores Double P.
+Componente reutilizable para mostrar información de usuario con botón de navegación al perfil. Diseño minimalista con colores Double π.
 
 ## Instalación
 
@@ -113,7 +113,7 @@ import BotonPerfilUsuario from './components/BotonPerfilUsuario';
 />
 ```
 
-## Colores Double P incluidos
+## Colores Double π incluidos
 
 - Dorado principal: `#b8904a`
 - Dorado oscuro: `#9A7738`

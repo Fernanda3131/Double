@@ -8,7 +8,7 @@ const Headerinicioregistro = () => {
       <div className="logo">
         <img
           src="/LOGO.png" // logo
-          alt="Double P Logo"
+          alt="Double π Logo"
           className="logo-img"
         />
         <span className="site-name">Double_P</span>

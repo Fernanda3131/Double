@@ -11,7 +11,7 @@ export default function Contactanos() {
       <div className="ct-wrapper">
         {/* Left visual: clothing image */}
         <div className="ct-left">
-          <div className="ct-brand-badge">Double P</div>
+          <div className="ct-brand-badge">Double π</div>
           <img
             className="ct-photo"
             src="/contacto.jpeg"

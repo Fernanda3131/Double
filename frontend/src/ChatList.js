@@ -140,7 +140,10 @@ function ChatList({ onClose }) {
       <Chat
         id_destinatario={conversacionSeleccionada.id_usuario}
         destinatarioInfo={conversacionSeleccionada}
-        onBack={() => setConversacionSeleccionada(null)}
+        onBack={() => {
+          setConversacionSeleccionada(null);
+          cargarConversaciones(); // Refresca la lista y los no leídos al volver
+        }}
       />
     );
   }

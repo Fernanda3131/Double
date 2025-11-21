@@ -184,10 +184,26 @@ function PagoTarjeta() {
           text: `¡Pago exitoso! ID de transacción: ${data.transaction.id}`, 
           type: 'success' 
         });
-        
+
         // Mostrar detalles de la transacción
         console.log('Transacción completa:', data.transaction);
-        
+
+        // Quitar la prenda comprada de la lista de deseos de todos los usuarios (backend)
+        if (paymentData.id_publicacion) {
+          fetch('http://localhost:5000/deseos/eliminar_de_todos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id_publicacion: paymentData.id_publicacion })
+          })
+            .then(res => res.json())
+            .then(data => {
+              if (!data.success) {
+                console.warn('No se pudo eliminar de todos los deseos:', data.error);
+              }
+            })
+            .catch(e => console.warn('Error eliminando de todos los deseos:', e));
+        }
+
         // Redirigir al catálogo después de un momento para que se recargue
         setTimeout(() => {
           navigate('/');

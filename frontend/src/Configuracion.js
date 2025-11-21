@@ -17,7 +17,7 @@ export default function Configuracion() {
         <div className="configuracion-wrapper">
           <div className="configuracion-header">
             <h1 className="configuracion-title">Configuración</h1>
-            <p className="configuracion-subtitle">Personaliza tu experiencia en Double P</p>
+            <p className="configuracion-subtitle">Personaliza tu experiencia en Double π</p>
           </div>
 
           <div className="configuracion-container">

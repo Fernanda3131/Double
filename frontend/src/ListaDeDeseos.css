@@ -26,18 +26,6 @@
   position: relative;
 }
 
-.lista-deseos-titulo::after {
-  content: '';
-  position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80px;
-  height: 4px;
-  background: linear-gradient(90deg, #6c757d 0%, #b8904a 50%, #6c757d 100%);
-  border-radius: 2px;
-}
-
 .lista-deseos-subtitle {
   font-size: 1.1rem;
   color: #6c757d;

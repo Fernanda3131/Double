@@ -112,7 +112,12 @@ function IniciarSesion({ setIsLoggedIn }) {
         setMensaje("✅ Inicio de sesión exitoso");
 
         setTimeout(() => {
-          navigate("/Catalogo");
+          const idRol = result.id_rol || localStorage.getItem("id_rol");
+          if (idRol === 1 || idRol === "1") {
+            navigate("/AdminDashboard");
+          } else {
+            navigate("/catalogo");
+          }
         }, 500);
       } else {
         setMensaje(result.mensaje || "⚠ Token inválido o expirado");

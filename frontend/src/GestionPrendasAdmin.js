@@ -53,16 +53,13 @@ function GestionPrendasAdmin() {
         "X-Id-Usuario": localStorage.getItem("id_usuario") || "",
         "Content-Type": "application/json",
       };
-      
       const response = await fetch(`${BACKEND_URL}/api/prendas`, {
         credentials: 'include',
         headers,
       });
-
       if (!response.ok) {
         throw new Error('Error al cargar prendas');
       }
-
       const data = await response.json();
       setPrendas(data);
       calcularEstadisticas(data);

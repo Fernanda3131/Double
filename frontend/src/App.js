@@ -98,13 +98,26 @@ function RootRedirect() {
 }
 
 // 🚀 APP PRINCIPAL
+
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    const token = localStorage.getItem("token");
+    const idRol = localStorage.getItem("id_rol");
+    // Acepta string o número, y solo si token existe
+    return Boolean(token) && (String(idRol) === "1" || String(idRol) === "2");
+  });
   const [openChatModal, setOpenChatModal] = useState(false);
 
+  // Sincroniza isLoggedIn solo en montaje y cambios de localStorage
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
+    const checkSession = () => {
+      const token = localStorage.getItem("token");
+      const idRol = localStorage.getItem("id_rol");
+      setIsLoggedIn(Boolean(token) && (String(idRol) === "1" || String(idRol) === "2"));
+    };
+    checkSession();
+    window.addEventListener("storage", checkSession);
+    return () => window.removeEventListener("storage", checkSession);
   }, []);
 
   // Escuchar evento global para abrir chat

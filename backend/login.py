@@ -159,92 +159,77 @@ def verificar():
         print(f"📧 Email recibido: {email}")
         print(f"🔑 Token recibido: {token_usuario}")
 
-        registro_temp = session.get("registro_temp")
-        print(f"📋 Datos en sesión: {registro_temp is not None}")
-        
-        if registro_temp:
-            print(f"✅ Sesión de registro encontrada")
-            print(f"   - Correo en sesión: {registro_temp.get('correo')}")
-            print(f"   - Token en sesión: {registro_temp.get('token')}")
-            
-            if email != registro_temp.get("correo"):
-                print(f"❌ El correo no coincide: {email} != {registro_temp.get('correo')}")
+
+        # Unificar verificación: aceptar tanto login_temp como registro_temp
+        temp_session = session.get("login_temp") or session.get("registro_temp")
+        print(f"📋 Datos en sesión: {temp_session is not None}")
+
+        if temp_session:
+            print(f"✅ Sesión encontrada")
+            print(f"   - Correo en sesión: {temp_session.get('correo')}")
+            print(f"   - Token en sesión: {temp_session.get('token')}")
+
+            if email != temp_session.get("correo"):
+                print(f"❌ El correo no coincide: {email} != {temp_session.get('correo')}")
                 return jsonify({"success": False, "mensaje": "⚠ El correo no coincide"}), 400
-            
-            if str(token_usuario) != str(registro_temp.get("token")):
-                print(f"❌ Token inválido: {token_usuario} != {registro_temp.get('token')}")
+
+            if str(token_usuario) != str(temp_session.get("token")):
+                print(f"❌ Token inválido: {token_usuario} != {temp_session.get('token')}")
                 return jsonify({"success": False, "mensaje": "❌ Token inválido"}), 400
 
-            print("✅ Token y correo válidos, insertando usuario...")
-            
-            from app import mysql
-            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            foto_nombre = registro_temp.get("foto") if registro_temp.get("foto") else 'default.jpg'
+            # Si es registro, insertar usuario
+            if session.get("registro_temp"):
+                print("✅ Token y correo válidos, insertando usuario...")
+                from app import mysql
+                cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                foto_nombre = temp_session.get("foto") if temp_session.get("foto") else 'default.jpg'
+                hashed_pw = temp_session.get("password", None)
+                cursor.execute(
+                    """INSERT INTO usuario 
+                    (primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, username, email, contrasena, talla, fecha_nacimiento, foto, id_rol)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+                    (
+                        temp_session["primer_nombre"],
+                        temp_session["segundo_nombre"],
+                        temp_session["primer_apellido"],
+                        temp_session["segundo_apellido"],
+                        temp_session["username"],
+                        temp_session["correo"],
+                        hashed_pw,
+                        temp_session["talla"],
+                        temp_session["fecha_nacimiento"],
+                        foto_nombre,
+                        2,
+                    ),
+                )
+                mysql.connection.commit()
+                session.pop("registro_temp", None)
+                print("✅ Usuario registrado exitosamente")
+                return jsonify({"success": True, "mensaje": "✅ Cuenta verificada y registrada correctamente"}), 200
 
-            # La contraseña ya debería haberse hasheado antes de guardarla en la
-            # sesión (en /register). Aquí recuperamos el hash y lo guardamos tal cual
-            # en la base de datos para evitar double-hashing o exponer el texto plano.
-            hashed_pw = registro_temp.get("password", None)
-
-            cursor.execute(
-                """INSERT INTO usuario 
-                (primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, username, email, contrasena, talla, fecha_nacimiento, foto, id_rol)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
-                (
-                    registro_temp["primer_nombre"],
-                    registro_temp["segundo_nombre"],
-                    registro_temp["primer_apellido"],
-                    registro_temp["segundo_apellido"],
-                    registro_temp["username"],
-                    registro_temp["correo"],
-                    hashed_pw,
-                    registro_temp["talla"],
-                    registro_temp["fecha_nacimiento"],
-                    foto_nombre,
-                    2,
-                ),
-            )
-            mysql.connection.commit()
-            session.pop("registro_temp", None)
-            
-            print("✅ Usuario registrado exitosamente")
-            return jsonify({"success": True, "mensaje": "✅ Cuenta verificada y registrada correctamente"}), 200
-
-        login_temp = session.get("login_temp")
-        if login_temp:
-            if token_usuario != login_temp.get("token"):
-                return jsonify({"success": False, "mensaje": "❌ Token inválido"}), 400
-
-            user_id = login_temp.get("id")
-            id_rol = login_temp.get("id_rol")
-            
-            # Obtener datos completos del usuario desde la base de datos
-            from app import mysql
-            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute("SELECT username, foto FROM usuario WHERE id_usuario = %s", (user_id,))
-            usuario_data = cursor.fetchone()
-            
-            session.pop("login_temp", None)
-            
-            # Establecer la sesión del usuario autenticado
-            session["id_usuario"] = user_id
-            session["id_rol"] = id_rol
-            session["correo"] = login_temp.get("correo")
-            session["nombre"] = login_temp.get("nombre")
-
-            response_data = {
-                "success": True, 
-                "mensaje": "✅ Verificación de login correcta", 
-                "id_usuario": user_id, 
-                "id_rol": id_rol
-            }
-            
-            # Agregar username y foto si están disponibles
-            if usuario_data:
-                response_data["username"] = usuario_data.get("username")
-                response_data["foto"] = usuario_data.get("foto")
-
-            return jsonify(response_data), 200
+            # Si es login, autenticar usuario
+            if session.get("login_temp"):
+                user_id = temp_session.get("id")
+                id_rol = temp_session.get("id_rol")
+                from app import mysql
+                cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                cursor.execute("SELECT username, foto FROM usuario WHERE id_usuario = %s", (user_id,))
+                usuario_data = cursor.fetchone()
+                session.pop("login_temp", None)
+                session["id_usuario"] = user_id
+                session["id_rol"] = id_rol
+                session["correo"] = temp_session.get("correo")
+                session["nombre"] = temp_session.get("nombre")
+                response_data = {
+                    "success": True,
+                    "mensaje": "✅ Verificación de login correcta",
+                    "id_usuario": user_id,
+                    "id_rol": id_rol
+                }
+                if usuario_data:
+                    response_data["username"] = usuario_data.get("username")
+                    response_data["foto"] = usuario_data.get("foto")
+                return jsonify(response_data), 200
 
         return jsonify({"success": False, "mensaje": "⚠ No hay proceso de verificación activo"}), 400
 

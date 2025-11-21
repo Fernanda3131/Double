@@ -44,7 +44,12 @@ function GestionarUsuarios() {
 
   const handleEditar = async (id_usuario) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/usuarios/${id_usuario}`);
+      const headers = {
+        "X-Id-Rol": localStorage.getItem("id_rol") || "",
+        "X-Id-Usuario": localStorage.getItem("id_usuario") || "",
+        "Content-Type": "application/json",
+      };
+      const res = await fetch(`http://localhost:5000/api/usuarios/${id_usuario}`, { headers, credentials: "include" });
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const data = await res.json();
       setSelectedUser(data);
@@ -80,9 +85,15 @@ function GestionarUsuarios() {
     if (payload.fecha_nacimiento)
       payload.fecha_nacimiento = formatDateForInput(payload.fecha_nacimiento);
     try {
+      const headers = {
+        "X-Id-Rol": localStorage.getItem("id_rol") || "",
+        "X-Id-Usuario": localStorage.getItem("id_usuario") || "",
+        "Content-Type": "application/json",
+      };
       const res = await fetch(`http://localhost:5000/api/usuarios/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
+        credentials: "include",
         body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error('Error al guardar usuario');
@@ -108,8 +119,15 @@ function GestionarUsuarios() {
       return;
     }
     try {
+      const headers = {
+        "X-Id-Rol": localStorage.getItem("id_rol") || "",
+        "X-Id-Usuario": localStorage.getItem("id_usuario") || "",
+        "Content-Type": "application/json",
+      };
       const res = await fetch(`http://localhost:5000/api/usuarios/${encodeURIComponent(maybeId)}`, {
         method: 'DELETE',
+        headers,
+        credentials: "include",
       });
       if (!res.ok) throw new Error('Error al eliminar usuario');
       setUsuarios(prev => prev.filter(u => u.id_usuario !== selectedUser.id_usuario));

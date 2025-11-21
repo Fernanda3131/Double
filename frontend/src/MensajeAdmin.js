@@ -29,13 +29,16 @@ function EnviarCorreo() {
           email_admin: "admin@doublepi.com"
         }
       };
-
+      const headers = {
+        "Content-Type": "application/json",
+        "X-Id-Rol": localStorage.getItem("id_rol") || "",
+        "X-Id-Usuario": localStorage.getItem("id_usuario") || "",
+      };
       const res = await fetch("http://127.0.0.1:5000/api/enviar_correo", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify(mensajeCompleto)
       });
-
       const data = await res.json();
       setRespuesta(data.resultado || JSON.stringify(data));
     } catch (error) {
@@ -46,8 +49,13 @@ function EnviarCorreo() {
   useEffect(() => {
     const fetchEmails = async () => {
       try {
+        const headers = {
+          "X-Id-Rol": localStorage.getItem("id_rol") || "",
+          "X-Id-Usuario": localStorage.getItem("id_usuario") || "",
+        };
         const res = await fetch("http://127.0.0.1:5000/api/usuarios_emails", {
-          credentials: "include"
+          credentials: "include",
+          headers
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();

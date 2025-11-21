@@ -55,35 +55,29 @@ function GestionarPublicacionesAdmin() {
         setLoading(true);
         setError(null);
         console.log("🔍 Cargando publicación ID:", idPublicacion);
-        
         const url = `http://localhost:5000/api/prendas/${idPublicacion}`;
         console.log("📡 URL completa:", url);
-        
+        const headers = {
+          'Content-Type': 'application/json',
+          'X-Id-Rol': localStorage.getItem('id_rol') || '',
+          'X-Id-Usuario': localStorage.getItem('id_usuario') || '',
+        };
         const res = await fetch(url, {
           method: 'GET',
           credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          }
+          headers
         });
-        
         console.log("📡 Response status:", res.status);
-        
         if (!res.ok) {
           const errorText = await res.text();
           console.error("❌ Error response:", errorText);
           throw new Error(`Error ${res.status}: No se pudo cargar la prenda`);
         }
-        
         const data = await res.json();
         console.log("📦 Datos recibidos:", data);
-        
-        // Validar que tenemos datos
         if (!data || !data.id_prenda) {
           throw new Error("No se encontraron datos de la prenda");
         }
-        
-        // Los datos vienen directamente del endpoint
         const formData = {
           id_prenda: data.id_prenda || "",
           nombre: data.nombre_prenda || "",
@@ -102,10 +96,8 @@ function GestionarPublicacionesAdmin() {
           foto3: null,
           foto4: null,
         };
-        
         console.log("💾 Guardando en form state:", formData);
         setForm(formData);
-        
         setLoading(false);
         console.log("✅ Prenda cargada exitosamente");
       } catch (err) {
@@ -114,7 +106,6 @@ function GestionarPublicacionesAdmin() {
         setLoading(false);
       }
     };
-
     fetchPrenda();
   }, [idPublicacion]);
 
@@ -143,9 +134,14 @@ function GestionarPublicacionesAdmin() {
     });
 
     try {
+      const headers = {
+        'X-Id-Rol': localStorage.getItem('id_rol') || '',
+        'X-Id-Usuario': localStorage.getItem('id_usuario') || '',
+      };
       const res = await fetch(`http://localhost:5000/api/prendas/${idPublicacion}`, {
         method: "PUT",
         credentials: 'include',
+        headers,
         body: formData,
       });
       const data = await res.json();
@@ -167,9 +163,14 @@ function GestionarPublicacionesAdmin() {
     setSuccessMessage(null);
     
     try {
+      const headers = {
+        'X-Id-Rol': localStorage.getItem('id_rol') || '',
+        'X-Id-Usuario': localStorage.getItem('id_usuario') || '',
+      };
       const res = await fetch(`http://localhost:5000/api/prendas/${idPublicacion}`, {
         method: "DELETE",
         credentials: 'include',
+        headers,
       });
       const data = await res.json();
       if (res.ok) {

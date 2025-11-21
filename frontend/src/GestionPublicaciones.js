@@ -37,6 +37,9 @@ function GestionPrendas() {
     foto3: null,
     foto4: null,
   });
+  // Estado para el carrusel
+  const fotosKeys = ["foto_actual", "foto2_actual", "foto3_actual", "foto4_actual"];
+  const [currentFoto, setCurrentFoto] = useState(0);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -183,24 +186,19 @@ function GestionPrendas() {
     }
   };
 
-  // --- Render fotos ---
-  const renderFoto = (num) => {
-    const key = `foto${num === 1 ? "" : num}`;
-    const actual = form[`${key}_actual`];
-    const previewUrl = preview[key];
+  // --- Render carrusel de fotos ---
+  const fotosDisponibles = fotosKeys.map((k, i) => ({
+    key: k.replace('_actual', ''),
+    actual: form[k],
+    previewUrl: preview[k.replace('_actual', '')],
+    idx: i
+  })).filter(f => f.actual || f.previewUrl);
 
-    return (
-      <div key={key} className="foto-preview">
-        {previewUrl ? (
-          <img src={previewUrl} alt={`preview ${key}`} />
-        ) : actual ? (
-          <img src={`http://localhost:5000/uploads/${actual}`} alt={actual} />
-        ) : (
-          <div className="foto-placeholder">No hay foto</div>
-        )}
-        <input type="file" name={key} accept="image/*" onChange={handleChange} />
-      </div>
-    );
+  const handlePrevFoto = () => {
+    setCurrentFoto((prev) => (prev === 0 ? fotosDisponibles.length - 1 : prev - 1));
+  };
+  const handleNextFoto = () => {
+    setCurrentFoto((prev) => (prev === fotosDisponibles.length - 1 ? 0 : prev + 1));
   };
 
   // Mostrar estado de carga
@@ -283,7 +281,6 @@ function GestionPrendas() {
             {error}
           </div>
         )}
-        
         <button
           className="back-arrow"
           type="button"
@@ -294,13 +291,57 @@ function GestionPrendas() {
           ⟵
         </button>
         <div className="editar-panel">
-          <div className={`editar-fotos${[1,2,3,4].filter(num => form[`foto${num === 1 ? "" : num}_actual`]).length === 3 ? ' tres-fotos' : ''}`}>
-            {[1, 2, 3, 4]
-              .filter((num) => {
-                const key = `foto${num === 1 ? "" : num}_actual`;
-                return form[key];
-              })
-              .map((num) => renderFoto(num))}
+          {/* Carrusel tipo tarjeta */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 400 }}>
+            <div style={{ position: 'relative', width: 260, height: 340, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f7f7fa', borderRadius: 32, boxShadow: '0 8px 24px rgba(0,0,0,0.10)', marginBottom: 24 }}>
+              {/* Flecha izquierda */}
+              {fotosDisponibles.length > 1 && (
+                <button onClick={handlePrevFoto} style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', background: '#fff', border: 'none', borderRadius: '50%', width: 36, height: 36, boxShadow: '0 2px 8px rgba(0,0,0,0.08)', cursor: 'pointer', zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ fontSize: 22, color: '#a07e44' }}>{'<'}</span>
+                </button>
+              )}
+              {/* Imagen principal */}
+              {fotosDisponibles.length > 0 ? (
+                <img
+                  src={fotosDisponibles[currentFoto].previewUrl ? fotosDisponibles[currentFoto].previewUrl : `http://localhost:5000/uploads/${fotosDisponibles[currentFoto].actual}`}
+                  alt="prenda"
+                  style={{ width: 220, height: 320, objectFit: 'cover', borderRadius: 24, boxShadow: '0 4px 16px rgba(0,0,0,0.10)' }}
+                />
+              ) : (
+                <div className="foto-placeholder" style={{ width: 220, height: 320, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 24, background: '#e0e0e0' }}>No hay foto</div>
+              )}
+              {/* Flecha derecha */}
+              {fotosDisponibles.length > 1 && (
+                <button onClick={handleNextFoto} style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', background: '#fff', border: 'none', borderRadius: '50%', width: 36, height: 36, boxShadow: '0 2px 8px rgba(0,0,0,0.08)', cursor: 'pointer', zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ fontSize: 22, color: '#a07e44' }}>{'>'}</span>
+                </button>
+              )}
+            </div>
+            {/* Dots del carrusel */}
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 8 }}>
+              {fotosDisponibles.map((f, idx) => (
+                <span key={idx} style={{
+                  width: 12,
+                  height: 12,
+                  borderRadius: '50%',
+                  background: idx === currentFoto ? '#a07e44' : '#e0d3b8',
+                  margin: '0 5px',
+                  display: 'inline-block',
+                  border: '2px solid #a07e44',
+                  transition: 'background 0.2s, border 0.2s'
+                }} />
+              ))}
+            </div>
+            {/* Input para cambiar la foto actual */}
+            {fotosDisponibles.length > 0 && (
+              <input
+                type="file"
+                name={fotosDisponibles[currentFoto].key}
+                accept="image/*"
+                onChange={handleChange}
+                style={{ marginTop: 16 }}
+              />
+            )}
           </div>
 
           <form className="editar-formulario" onSubmit={handleEditar}>

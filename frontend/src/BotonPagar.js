@@ -49,7 +49,7 @@ function BotonPagar({
       onClick={handlePay}
       className={`boton-pagar ${className}`}
     >
-      Pagar $
+      Pagar 
     </button>
   );
 }

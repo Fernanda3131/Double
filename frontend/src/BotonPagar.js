@@ -49,7 +49,7 @@ function BotonPagar({
       onClick={handlePay}
       className={`boton-pagar ${className}`}
     >
-      💳 Pagar ${Number(amount).toLocaleString('es-CO', { minimumFractionDigits: 2 })}
+      Pagar $
     </button>
   );
 }

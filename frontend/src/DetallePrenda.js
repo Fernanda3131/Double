@@ -49,7 +49,8 @@ function DetallePrenda() {
   const miIdUsuario = localStorage.getItem("id_usuario");
 
   return (
-    <div className="detalle-prenda-container minimal">
+    <div className="detalle-prenda-bg-blanco">
+      <div className="detalle-prenda-container minimal">
       <div className="detalle-prenda-main-row">
         {/* IZQUIERDA: Foto o carrusel */}
         <div className="detalle-prenda-foto-col">
@@ -157,6 +158,7 @@ function DetallePrenda() {
       >
         ←
       </button>
+      </div>
     </div>
   );
 }

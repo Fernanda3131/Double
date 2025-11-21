@@ -246,7 +246,7 @@ function GestionPrendas() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#fff' }}>
       <div className="editar-container" style={{position: 'relative', flex: '1 0 auto'}}>
         {/* Mensajes de éxito/error */}
         {successMessage && (
